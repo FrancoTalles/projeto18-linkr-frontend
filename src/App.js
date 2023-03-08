@@ -1,24 +1,21 @@
-import logo from './logo.svg';
-import './App.css';
-
+import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { GlobalStyle } from "./globalStyles.js";
+import AuthProvider from "./contexts/auth.context.js";
+import SignUp from "../src/components/SignUp.js";
+import SignIn from "./components/SignIn.js";
+//Quem estiver fazendo a rota timeline, por favor remove o comentário no components SingIn quando recebe a resposta da promise por favor.
 function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+  return (<>
+    <GlobalStyle />
+    <AuthProvider>
+      <BrowserRouter>
+        <Routes>
+          <Route path="/sign-up" element={<SignUp />} />
+          <Route path="/" element={<SignIn />} />
+        </Routes>
+      </BrowserRouter>
+    </AuthProvider>
+  </>
   );
 }
 
