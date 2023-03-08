@@ -3,6 +3,7 @@ import { GlobalStyle } from "./globalStyles.js";
 import AuthProvider from "./contexts/auth.context.js";
 import SignUp from "../src/components/SignUp.js";
 import SignIn from "./components/SignIn.js";
+import UserPage from "./components/UserPage/UserPage.js";
 //Quem estiver fazendo a rota timeline, por favor remove o comentário no components SingIn quando recebe a resposta da promise por favor.
 function App() {
   return (<>
@@ -12,6 +13,7 @@ function App() {
         <Routes>
           <Route path="/sign-up" element={<SignUp />} />
           <Route path="/" element={<SignIn />} />
+          <Route path="/user/:id" element={<UserPage />} />
         </Routes>
       </BrowserRouter>
     </AuthProvider>
