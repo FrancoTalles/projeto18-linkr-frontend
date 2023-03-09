@@ -4,7 +4,10 @@ export const UserPageContainer = styled.div`
     width: 100vw ;
     height: 100vh;
     background-color: #333333;
-    padding: 125px 200px;
+    padding-top: 140px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
 `;
 
 export const UserName = styled.div`
@@ -33,8 +36,6 @@ export const UserName = styled.div`
 `;
 
 export const UserPosts = styled.div`
-    width: 611px; 
-    height: 100%;
     display: flex;
     flex-direction: column;
     gap: 16px;

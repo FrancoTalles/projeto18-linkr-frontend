@@ -1,5 +1,5 @@
 import Header from "../Header/Header.js";
-import Post from "../Post/Post.js";
+import { Post } from "../Post";
 import { UserName, UserPageContainer, UserPosts } from "./style.js";
 
 export default function UserPage() {
