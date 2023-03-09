@@ -1,3 +1,6 @@
+import { IoTrash, IoPencil } from "react-icons/io5";
+import { api } from "../../services/api";
+
 import {
   Container,
   PhotoLikesContainer,
@@ -10,6 +13,7 @@ import {
   LinkDescription,
   LinkUrl,
   LinkImage,
+  IconsContainer,
 } from "./styles";
 
 export function Post({
@@ -21,19 +25,47 @@ export function Post({
   linkDescription,
   linkImage,
 }) {
+  async function handleDeletePost(id) {
+    try {
+      await api.delete(
+        `/posts`,
+        {},
+        {
+          headers: {
+            //Authorization: `Bearer ${user.token}`,
+          },
+        }
+      );
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
+  async function handleEditPost(id) {
+    try {
+      await api.put(
+        `/posts`,
+        {},
+        {
+          headers: {
+            //Authorization: `Bearer ${user.token}`,
+          },
+        }
+      );
+    } catch (error) {
+      console.log(error);
+    }
+  }
   return (
     <Container>
       <PhotoLikesContainer>
-        <ProfilePicture src="http://c.files.bbci.co.uk/17444/production/_124800359_gettyimages-817514614.jpg" />
+        <ProfilePicture src={profilePicture} />
       </PhotoLikesContainer>
 
       <PostContainer>
-        <PostAuthor>Juvenal Juvêncio</PostAuthor>
+        <PostAuthor>{author}</PostAuthor>
 
-        <PostDescription>
-          Muito maneiro esse post Muito maneiro esse post Muito maneiro esse
-          post Muito maneiro esse post Muito maneiro esse post
-        </PostDescription>
+        <PostDescription>{description}</PostDescription>
 
         <PostLink href={link} target="_blank">
           <div>
@@ -45,12 +77,19 @@ export function Post({
               available lorem
             </LinkDescription>
 
-            <LinkUrl>www.example.com</LinkUrl>
+            <LinkUrl>{link}</LinkUrl>
           </div>
 
           <LinkImage src="https://pbs.twimg.com/profile_images/446356636710363136/OYIaJ1KK_400x400.png" />
         </PostLink>
       </PostContainer>
+
+      {true && (
+        <IconsContainer>
+          <IoPencil onClick={() => alert("edit")} />
+          <IoTrash onClick={() => alert("delete")} />
+        </IconsContainer>
+      )}
     </Container>
   );
 }

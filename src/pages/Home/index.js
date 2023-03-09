@@ -1,6 +1,11 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useContext } from "react";
+import { useNavigate } from "react-router-dom";
+
 import { Post } from "../../components/Post";
+
 import { api } from "../../services/api";
+
+import { AuthContext } from "../../contexts/auth.context";
 
 import {
   Container,
@@ -18,14 +23,23 @@ import {
 
 export function Home() {
   const [isLoading, setIsLoading] = useState(true);
-  const [posts, setPosts] = useState(true);
+  const [isLoadingButton, setIsLoadingButton] = useState(false);
+  const [posts, setPosts] = useState();
+  const [link, setLink] = useState("");
+  const [description, setDescription] = useState("");
+
+  const {user} = useContext(AuthContext);
+
+  const navigate = useNavigate();
+
+  console.log(user.token)
 
   async function getAllPosts() {
     setIsLoading(true);
     try {
-      const postsData = await api.get("/post", {
+      const postsData = await api.get("/posts", {
         headers: {
-          //Authorization: `Bearer ${userData.token}`,
+          Authorization: `Bearer a9cb3502-2a6a-4894-ab54-11e5905cb4eb`,
         },
       });
 
@@ -33,47 +47,49 @@ export function Home() {
       setIsLoading(false);
     } catch (error) {
       console.log(error);
+      alert("An error occurred while trying to fetch the posts, please refresh the page")
     }
   }
 
-  async function handleCreatePost() {
+  async function handleCreatePost(e) {
+    e.preventDefault();
+    setIsLoadingButton(true);
     try {
       await api.post(
-        "/post",
-        {},
+        "/posts",
+        {
+          link,
+          description
+        },
         {
           headers: {
-            //Authorization: `Bearer ${userData.token}`,
+            Authorization: `Bearer a9cb3502-2a6a-4894-ab54-11e5905cb4eb`,
           },
         }
       );
-
+      setLink("");
+      setDescription("");
+      setIsLoadingButton(false);
       getAllPosts();
     } catch (error) {
       console.log(error);
+      setIsLoadingButton(false);
     }
   }
 
-  async function handleDeletePost(id) {
-    try {
-      await api.delete(
-        `/post`,
-        {},
-        {
-          headers: {
-            //Authorization: `Bearer ${userData.token}`,
-          },
-        }
-      );
-    } catch (error) {
-      console.log(error);
-    }
-  }
+
 
   useEffect(() => {
-    getAllPosts();
+    if (!user) {
+      navigate("/")
+    } else {
+      getAllPosts();
+    }
+    
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
+
+
 
   return (
     <Container>
@@ -85,21 +101,59 @@ export function Home() {
         <NewPostContainer>
           <ContainerTitle>What are you going to share today?</ContainerTitle>
 
-          <LinkInput />
+          <LinkInput 
+            placeholder="http://..."
+            value={link}
+            onChange={(e) => setLink(e.target.value)}
+            disabled={isLoadingButton}
+          />
 
-          <DescriptionInput />
+          <DescriptionInput 
+            placeholder="Awesome article about #javascript"
+            value={description}
+            onChange={(e) => setDescription(e.target.value)}
+            disabled={isLoadingButton}
+          />
           <div>
             <Button>
-              <ButtonText>Publish</ButtonText>
+              <ButtonText onClick={handleCreatePost}>Publish</ButtonText>
             </Button>
           </div>
         </NewPostContainer>
       </FormContainer>
 
-      <PostContainer>
-        <Post />
-        <Post />
-      </PostContainer>
+      
+        {
+          isLoading ?
+          <PostContainer>
+          <p>Loading</p>
+          </PostContainer>
+          :
+          (
+            <PostContainer>
+              {
+                posts.length === 0 ?
+                (
+                  <p>There are no posts yet</p>
+                )
+                :
+                posts.map(post => {
+                  return (
+                    <Post
+                    key={post.postid}   
+                    author={post.postauthor}
+                    profilePicture={post.authorphoto}
+                    description={post.postdescription}
+                    link={post.postlink}
+                    />
+                  )
+                })
+              }
+              
+            </PostContainer>
+          )
+        }
+      
     </Container>
   );
 }
