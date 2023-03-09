@@ -1,5 +1,11 @@
+import { useContext, useRef, useState } from "react";
 import { IoTrash, IoPencil } from "react-icons/io5";
+
+import { AuthContext } from "../../contexts/auth.context";
+
 import { api } from "../../services/api";
+
+import { Modal } from "../Modal";
 
 import {
   Container,
@@ -14,6 +20,7 @@ import {
   LinkUrl,
   LinkImage,
   IconsContainer,
+  LinkInput,
 } from "./styles";
 
 export function Post({
@@ -24,72 +31,157 @@ export function Post({
   linkTitle,
   linkDescription,
   linkImage,
+  postId,
+  getAllPosts,
+  routeOrigin,
 }) {
-  async function handleDeletePost(id) {
+  const [isEditing, setIsEditing] = useState();
+  const [postDescription, setPostDescription] = useState(description);
+  const [isLoading, setIsLoading] = useState(false);
+  const [isDeleting, setIsDeleting] = useState(false);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const descRef = useRef(null);
+
+  const { user } = useContext(AuthContext);
+
+  async function handleDeletePost() {
+    setIsDeleting(true);
     try {
-      await api.delete(
-        `/posts`,
-        {},
-        {
-          headers: {
-            //Authorization: `Bearer ${user.token}`,
-          },
-        }
-      );
+      await api.delete(`/posts/${postId}`, {
+        headers: {
+          Authorization: `Bearer ${user.token}`,
+        },
+      });
+      getAllPosts();
+      setIsDeleting(false);
     } catch (error) {
+      setIsDeleting(false);
+      handleModal(false);
+      alert("Unable to delete post, please try again later.");
       console.log(error);
     }
   }
 
-  async function handleEditPost(id) {
+  async function handleEditPost() {
+    setIsLoading(true);
+    console.log(postId);
     try {
       await api.put(
         `/posts`,
-        {},
+        {
+          postId: postId,
+          description: postDescription,
+        },
         {
           headers: {
-            //Authorization: `Bearer ${user.token}`,
+            Authorization: `Bearer ${user.token}`,
           },
         }
       );
+      setIsEditing(false);
+      setIsLoading(false);
     } catch (error) {
+      alert(
+        "An error occurred while trying to update the post, please try again."
+      );
+      setIsLoading(false);
       console.log(error);
     }
   }
+
+  function handleEditClick() {
+    const newIsEditing = !isEditing;
+
+    if (newIsEditing) {
+      setIsEditing(true);
+    } else {
+      setPostDescription(description);
+      setIsEditing(false);
+    }
+  }
+
+  function handleKeyPressed(e) {
+    switch (e.key) {
+      case "Enter":
+        handleEditPost();
+        break;
+      case "Escape":
+        setPostDescription(description);
+        setIsEditing(false);
+        break;
+      default:
+        break;
+    }
+  }
+
+  function handleModal(isOpen) {
+    setIsModalOpen(isOpen);
+  }
+
   return (
-    <Container>
-      <PhotoLikesContainer>
-        <ProfilePicture src={profilePicture} />
-      </PhotoLikesContainer>
+    <>
+      {!isDeleting && (
+        <Container data-test="post">
+          <PhotoLikesContainer>
+            <ProfilePicture src={profilePicture} />
+          </PhotoLikesContainer>
 
-      <PostContainer>
-        <PostAuthor>{author}</PostAuthor>
+          <PostContainer>
+            <PostAuthor data-test="username">{author}</PostAuthor>
 
-        <PostDescription>{description}</PostDescription>
+            {isEditing ? (
+              <LinkInput
+                value={postDescription}
+                ref={descRef}
+                onChange={(e) => setPostDescription(e.target.value)}
+                onKeyDown={handleKeyPressed}
+                disabled={isLoading}
+                autoFocus
+                data-test="edit-input"
+              />
+            ) : (
+              <PostDescription data-test="description">
+                {postDescription}
+              </PostDescription>
+            )}
 
-        <PostLink href={link} target="_blank">
-          <div>
-            <LinkTitle>
-              Como aplicar o material UI em um projeto react
-            </LinkTitle>
-            <LinkDescription>
-              lorem Ipsum is simply dummy text et so indent level is always
-              available lorem
-            </LinkDescription>
+            <PostLink href={link} target="_blank" data-test="link">
+              <div>
+                <LinkTitle>{linkTitle}</LinkTitle>
+                <LinkDescription>{linkDescription}</LinkDescription>
 
-            <LinkUrl>{link}</LinkUrl>
-          </div>
+                <LinkUrl>{link}</LinkUrl>
+              </div>
 
-          <LinkImage src="https://pbs.twimg.com/profile_images/446356636710363136/OYIaJ1KK_400x400.png" />
-        </PostLink>
-      </PostContainer>
+              <LinkImage src={linkImage} />
+            </PostLink>
+          </PostContainer>
 
-      {true && (
-        <IconsContainer>
-          <IoPencil onClick={() => alert("edit"+ author)} />
-          <IoTrash onClick={() => alert("delete"+ author)} />
-        </IconsContainer>
+          {user.username === author && routeOrigin === "/timeline" && (
+            <IconsContainer>
+              <IoPencil
+                onClick={handleEditClick}
+                cursor="pointer"
+                data-test="edit-btn"
+              />
+              <IoTrash
+                onClick={() => handleModal(true)}
+                cursor="pointer"
+                data-test="delete-btn"
+              />
+            </IconsContainer>
+          )}
+        </Container>
       )}
-    </Container>
+      <Modal
+        isModalOpen={isModalOpen}
+        handleCloseModal={() => handleModal(false)}
+        handleConfirm={handleDeletePost}
+        isDeleting={isDeleting}
+        title="Are you sure you want to delete this post?"
+        cancelText="No, go back"
+        confirmText="Yes, delete it"
+      />
+    </>
   );
 }
