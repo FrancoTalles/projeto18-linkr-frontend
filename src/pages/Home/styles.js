@@ -9,6 +9,9 @@ export const Container = styled.div`
   width: 100%;
   height: 100%;
 
+  @media (max-width: 620px) {
+    padding-top: 100px;
+}
 `;
 
 export const Title = styled.h1`
@@ -28,7 +31,6 @@ export const Title = styled.h1`
     font-size: 33px;
     padding-bottom: 32px;
   }
-
 `;
 
 export const FormContainer = styled.div`
@@ -76,14 +78,13 @@ export const NewPostContainer = styled.form`
     justify-content: flex-end;
 
     @media (max-width: 460px) {
-        padding-top: 0px;
+      padding-top: 0px;
     }
   }
 
   @media (max-width: 650px) {
     width: 100%;
   }
-  
 `;
 
 export const ContainerTitle = styled.h3`
@@ -134,7 +135,6 @@ export const Button = styled.button`
   display: flex;
   justify-content: center;
   align-items: center;
-  
 `;
 
 export const ButtonText = styled.p`
@@ -152,4 +152,18 @@ export const PostContainer = styled.div`
   @media (max-width: 650px) {
     width: 100%;
   }
+`;
+
+export const NoPostsText = styled.p`
+  font-family: "Oswald";
+  font-weight: 400;
+  font-size: 24px;
+  line-height: 36px;
+  color: #FFFFFF;
+
+  @media (max-width: 650px) {
+    width: 100%;
+    text-align: center;
+  }
+
 `;

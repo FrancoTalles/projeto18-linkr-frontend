@@ -18,8 +18,10 @@ import {
   DescriptionInput,
   Button,
   ButtonText,
-  PostContainer
+  PostContainer,
+  NoPostsText
 } from "./styles";
+import Header from "../../components/Header/Header";
 
 export function Home() {
   const [isLoading, setIsLoading] = useState(true);
@@ -93,6 +95,7 @@ export function Home() {
 
   return (
     <Container>
+      <Header />
       <Title>timeline</Title>
 
       <FormContainer>
@@ -126,7 +129,7 @@ export function Home() {
         {
           isLoading ?
           <PostContainer>
-          <p>Loading</p>
+          <NoPostsText>Loading</NoPostsText>
           </PostContainer>
           :
           (
@@ -134,7 +137,7 @@ export function Home() {
               {
                 posts.length === 0 ?
                 (
-                  <p>There are no posts yet</p>
+                  <NoPostsText>There are no posts yet</NoPostsText>
                 )
                 :
                 posts.map(post => {

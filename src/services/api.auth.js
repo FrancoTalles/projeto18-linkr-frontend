@@ -1,6 +1,6 @@
 import axios from "axios";
 //Verificar como deixar essa baseURL no .env, que no meu ele não achou automaticamente
-const baseURL="http://localhost:5001"
+const baseURL="http://localhost:5000"
 
 function submitSignUp(body){
     const promise = axios.post(`${baseURL}/signup`, body);

@@ -86,8 +86,8 @@ export function Post({
 
       {true && (
         <IconsContainer>
-          <IoPencil onClick={() => alert("edit")} />
-          <IoTrash onClick={() => alert("delete")} />
+          <IoPencil onClick={() => alert("edit"+ author)} />
+          <IoTrash onClick={() => alert("delete"+ author)} />
         </IconsContainer>
       )}
     </Container>
