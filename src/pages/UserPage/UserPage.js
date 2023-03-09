@@ -47,7 +47,7 @@ export default function UserPage() {
             <Header />
             <UserName>
                 <img src={posts?.authorphoto} />
-                <h1>{posts?.postauthor}</h1>
+                <h1>{`${posts?.postauthor} posts`}</h1>
             </UserName>
             <UserPosts>
                 {
