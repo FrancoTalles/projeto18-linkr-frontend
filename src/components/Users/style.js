@@ -1,6 +1,7 @@
 import styled from "styled-components";
 
-export const UsersContainer = styled.li`
+export const UsersContainer = styled.div`
+    width: 100%;
     padding: 5px;
     cursor: pointer;
     display: flex;
