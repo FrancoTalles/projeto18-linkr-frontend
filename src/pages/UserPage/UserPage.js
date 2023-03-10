@@ -20,7 +20,7 @@ export default function UserPage() {
         try {
             const promise = await api.get(`/user/${id}`, {
                 headers: {
-                    Authorization: `Bearer a9cb3502-2a6a-4894-ab54-11e5905cb4eb`,
+                    Authorization: `Bearer ${user.token}`,
                 },
             });
 
@@ -33,7 +33,7 @@ export default function UserPage() {
     }
 
     useEffect(() => {
-        if (!user) {
+        if (!user.token) {
             navigate("/");
         } else {
             getPostsUser();
