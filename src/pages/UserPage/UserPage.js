@@ -53,7 +53,7 @@ export default function UserPage() {
                 {
                     posts?.postsUser.length === 0 ?
                         (
-                            <NoPostsText>There are no posts yet</NoPostsText>
+                            <NoPostsText data-test="message">There are no posts yet</NoPostsText>
                         ) :
                         posts?.postsUser.map((post) =>
                             <Post

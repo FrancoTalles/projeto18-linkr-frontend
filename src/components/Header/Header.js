@@ -66,6 +66,7 @@ export default function Header() {
                     minLength={3}
                     debounceTimeout={300}
                     onChange={(e) => setName(e.target.value)}
+                    data-test="search"
                 />
 
                 {users.length > 0 && (
@@ -95,12 +96,12 @@ export default function Header() {
                     <IoChevronUp
                     />
                 }
-                <img src={user.pictureURL} />
+                <img src={user.pictureURL} data-test="avatar" />
             </Logout>
 
             {logout && (
-                <div className="logout" onClick={() => handleLogOut()}>
-                    <p>Logout</p>
+                <div className="logout" onClick={() => handleLogOut()} data-test="menu">
+                    <button data-test="logout">Logout</button>
                 </div>
             )}
         </HeaderStyled>
