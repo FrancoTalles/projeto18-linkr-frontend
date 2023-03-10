@@ -1,10 +1,19 @@
+import { Link } from "react-router-dom";
 import { UsersContainer } from "./style";
 
-export function Users({ id, username, userphoto }) {
+export function Users({ setUsers, setName, id, username, userphoto }) {
+
+
     return (
-        <UsersContainer>
-            <img src={userphoto} />
-            <h1>{username}</h1>
-        </UsersContainer>
+        <Link to={`/user/${id}`}>
+            <UsersContainer onClick={() => {
+                setName("");
+                setUsers([]);
+            }}>
+                <img src={userphoto} />
+                <h1>{username}</h1>
+            </UsersContainer>
+        </Link>
+
     );
 }

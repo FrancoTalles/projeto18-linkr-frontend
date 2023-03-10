@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { HeaderStyled, SuggestionsList, SuggestionsWrapper } from "./style";
+import { HeaderStyled, Icon, SuggestionsList, SuggestionsWrapper } from "./style";
 import { DebounceInput } from 'react-debounce-input';
 import { api } from "../../services/api.js";
 import { Users } from "../Users/Users";
@@ -57,7 +57,10 @@ export default function Header() {
                         <SuggestionsList>
                             {users.map((user) => (
                                 < Users
+                                    setUsers={searchUsers}
+                                    setName={setName}
                                     key={user.id}
+                                    id={user.id}
                                     username={user.username}
                                     userphoto={user.pictureURL}
                                 />
