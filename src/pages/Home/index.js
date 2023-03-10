@@ -165,6 +165,9 @@ export function Home() {
                   linkImage={post.linkimage}
                   getAllPosts={getAllPosts}
                   routeOrigin={"/timeline"}
+                  liked={post.liked}
+                  likeCount={post.likescount}
+                  whoLiked={post.wholiked}
                 />
               );
             })

@@ -14,7 +14,11 @@ export const Container = styled.div`
   }
 `;
 
-export const PhotoLikesContainer = styled.div``;
+export const PhotoLikesContainer = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+`;
 
 export const ProfilePicture = styled.img`
   width: 50px;
@@ -24,6 +28,25 @@ export const ProfilePicture = styled.img`
   @media (max-width: 650px) {
     width: 40px;
     height: 40px;
+  }
+`;
+
+export const LikeContainer = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  align-items: center;
+
+  p {
+    text-align: center;
+    font-family: 'Lato';
+
+font-weight: 400;
+font-size: 11px;
+line-height: 13px;
+text-align: center;
+
+color: #FFFFFF;
   }
 `;
 

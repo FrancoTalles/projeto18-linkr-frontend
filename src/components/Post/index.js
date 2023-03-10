@@ -1,7 +1,9 @@
-import { useContext, useRef, useState } from "react";
-import { IoTrash, IoPencil } from "react-icons/io5";
+import { useContext, useEffect, useRef, useState } from "react";
+import { IoTrash, IoPencil, IoHeartOutline, IoHeart } from "react-icons/io5";
 import { ReactTagify } from "react-tagify";
 import { useNavigate } from "react-router-dom";
+import { Tooltip as ReactTooltip } from "react-tooltip";
+import "react-tooltip/dist/react-tooltip.css";
 
 import { AuthContext } from "../../contexts/auth.context";
 
@@ -23,6 +25,7 @@ import {
   LinkImage,
   IconsContainer,
   LinkInput,
+  LikeContainer,
 } from "./styles";
 
 export function Post({
@@ -37,12 +40,18 @@ export function Post({
   authorId,
   getAllPosts,
   routeOrigin,
+  liked,
+  likeCount,
+  whoLiked,
 }) {
   const [isEditing, setIsEditing] = useState();
   const [postDescription, setPostDescription] = useState(description);
   const [isLoading, setIsLoading] = useState(false);
   const [isDeleting, setIsDeleting] = useState(false);
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isLiked, setIsLiked] = useState(liked);
+  const [likesName, setLikesName] = useState();
+
   const descRef = useRef(null);
 
   const { user } = useContext(AuthContext);
@@ -147,12 +156,45 @@ export function Post({
     navigate(`/user/${authorId}`);
   }
 
+  useEffect(() => {
+    if (whoLiked !== undefined && whoLiked !== null) {
+      const names = formatNames(whoLiked, user.username);
+      setLikesName(names);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [isLiked]);
+
   return (
     <Container data-test="post">
       {!isDeleting && (
         <>
           <PhotoLikesContainer>
             <ProfilePicture src={profilePicture} />
+
+            <LikeContainer>
+              {liked ? (
+                <IoHeart
+                  color="red"
+                  onClick={toggleLike}
+                  data-test="like-btn"
+                />
+              ) : (
+                <IoHeartOutline 
+                  onClick={toggleLike}
+                  data-test="like-btn"
+                />
+              )}
+
+              <p
+                data-tooltip-id="my-tooltip"
+                data-tooltip-variant="light"
+                data-tooltip-content={likesName}
+                data-test="tooltip"
+              >
+                {likeCount} likes
+              </p>
+              <ReactTooltip id="my-tooltip" effect="solid" place="bottom" />
+            </LikeContainer>
           </PhotoLikesContainer>
 
           <PostContainer>
