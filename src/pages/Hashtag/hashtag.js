@@ -12,7 +12,6 @@ import {
   HashtagContainer,
   HashtagLeft,
   HashtagTitle,
-  PostTeste,
 } from "./style";
 
 export default function Hashtag() {
@@ -48,7 +47,7 @@ export default function Hashtag() {
     } else {
       getAllPostsWithHashtag();
     }
-  }, []);
+  }, [hashtag]);
 
   return (
     <>

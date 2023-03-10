@@ -8,11 +8,21 @@ export const Container = styled.div`
   padding-top: 140px;
   width: 100%;
   height: 100%;
+  position: relative;
 
   @media (max-width: 620px) {
     padding-top: 100px;
 }
 `;
+
+export const ContainerHashtagBox = styled.div`
+  position: absolute;
+  top: 65px;
+  right: 60px;
+  @media (max-width: 1150px) {
+    display: none;
+}
+`
 
 export const Title = styled.h1`
   padding-bottom: 42px;

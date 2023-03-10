@@ -5,7 +5,7 @@ export const HashtagRight = styled.div`
 `;
 
 export const HashtagsBox = styled.div`
-  width: 301px;
+  min-width: 200px;
   height: 406px;
   border-radius: 16px;
   background-color: #171717;
@@ -29,15 +29,16 @@ export const HashtagsBoxTitle = styled.div`
 `;
 
 export const HashtagsRoutes = styled.div`
-    margin-left: 16px;
-    margin-bottom: 7px;
-    p {
-        font-family: 'Lato', sans-serif;
-        font-style: normal;
-        font-weight: 700;
-        font-size: 19px;
-        line-height: 23px;
-        letter-spacing: 0.05em;
-        color: #ffffff;
-    }
-`
+  margin-left: 16px;
+  margin-bottom: 7px;
+  p {
+    font-family: "Lato", sans-serif;
+    font-style: normal;
+    font-weight: 700;
+    font-size: 19px;
+    line-height: 23px;
+    letter-spacing: 0.05em;
+    color: #ffffff;
+    cursor: pointer;
+  }
+`;
