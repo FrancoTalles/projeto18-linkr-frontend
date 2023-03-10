@@ -56,7 +56,7 @@ export default function Header() {
 
     return (
         <HeaderStyled>
-            <h1>linkr</h1>
+            <h1 onClick={() => navigate("/timeline")}>linkr</h1>
 
 
             <div>
