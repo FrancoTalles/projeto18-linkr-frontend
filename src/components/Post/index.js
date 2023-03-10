@@ -56,7 +56,9 @@ export function Post({
           Authorization: `Bearer ${user.token}`,
         },
       });
-      getAllPosts();
+      
+      getAllPosts(false);
+      handleModal(false);
       setIsDeleting(false);
     } catch (error) {
       setIsDeleting(false);
@@ -143,9 +145,9 @@ export function Post({
   }
 
   return (
-    <>
+    <Container data-test="post">
       {!isDeleting && (
-        <Container data-test="post">
+        <>
           <PhotoLikesContainer>
             <ProfilePicture src={profilePicture} />
           </PhotoLikesContainer>
@@ -200,7 +202,7 @@ export function Post({
               />
             </IconsContainer>
           )}
-        </Container>
+        </>
       )}
       <Modal
         isModalOpen={isModalOpen}
@@ -211,6 +213,6 @@ export function Post({
         cancelText="No, go back"
         confirmText="Yes, delete it"
       />
-    </>
+    </Container>
   );
 }

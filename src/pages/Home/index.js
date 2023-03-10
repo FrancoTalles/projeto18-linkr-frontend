@@ -38,8 +38,11 @@ export function Home() {
 
   console.log(user.token);
 
-  async function getAllPosts() {
-    setIsLoading(true);
+  async function getAllPosts(isFirstLoad) {
+    if (isFirstLoad) {
+      setIsLoading(true);
+    }
+    
     try {
       const postsData = await api.get("/posts", {
         headers: {
@@ -81,7 +84,7 @@ export function Home() {
       setLink("");
       setDescription("");
       setIsLoadingButton(false);
-      getAllPosts();
+      getAllPosts(false);
     } catch (error) {
       alert("There was an error publishing your link");
       console.log(error);

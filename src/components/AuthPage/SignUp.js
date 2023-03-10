@@ -13,6 +13,10 @@ export default function SignUp() {
     }
 
     function handleSubmit(e) {
+        if (formInfo.email === "" || formInfo.password === "" || formInfo.username === "" || formInfo.pictureURL === "") {
+            alert("Please fill in all text fields.");
+            return;
+        }
         e.preventDefault();
         setIsLoading(true);
         apiAuth.submitSignUp(formInfo)

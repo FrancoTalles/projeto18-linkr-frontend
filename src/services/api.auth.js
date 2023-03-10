@@ -1,16 +1,16 @@
 import axios from "axios";
 
-const baseURL=process.env.REACT_APP_API_URL;
+const baseURL = process.env.REACT_APP_API_URL;
 
-function submitSignUp(body){
+function submitSignUp(body) {
     const promise = axios.post(`${baseURL}/signup`, body);
-    return promise
+    return promise;
 };
 
-function submitSignIn(body){
+function submitSignIn(body) {
     const promise = axios.post(`${baseURL}/signin`, body);
-    return promise
+    return promise;
 }
 
-const apiAuth = {submitSignUp, submitSignIn};
+const apiAuth = { submitSignUp, submitSignIn };
 export default apiAuth;

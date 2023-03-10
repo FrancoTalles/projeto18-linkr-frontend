@@ -17,6 +17,10 @@ export default function SignIn() {
 
     function handleSubmit(e) {
         e.preventDefault();
+        if (formInfo.email === "" || formInfo.password === "" ) {
+            alert("Please fill in all text fields.");
+            return;
+        }
         setIsLoading(true);
         apiAuth.submitSignIn(formInfo)
             .then(res => {

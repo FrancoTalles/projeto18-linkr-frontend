@@ -20,7 +20,7 @@ export default function UserPage() {
         try {
             const promise = await api.get(`/user/${id}`, {
                 headers: {
-                    Authorization: `Bearer a9cb3502-2a6a-4894-ab54-11e5905cb4eb`,
+                    Authorization: `Bearer ${user.token}`,
                 },
             });
 
@@ -33,21 +33,21 @@ export default function UserPage() {
     }
 
     useEffect(() => {
-        if (!user) {
+        if (!user.token) {
             navigate("/");
         } else {
             getPostsUser();
         }
 
         // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, []);
+    }, [id]);
 
     return (
         <UserPageContainer>
             <Header />
             <UserName>
                 <img src={posts?.authorphoto} />
-                <h1>{posts?.postauthor}</h1>
+                <h1>{`${posts?.postauthor} posts`}</h1>
             </UserName>
             <UserPosts>
                 {
