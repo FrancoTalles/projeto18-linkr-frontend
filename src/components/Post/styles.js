@@ -59,6 +59,7 @@ export const PostAuthor = styled.p`
   font-size: 19px;
   line-height: 23px;
   color: #ffffff;
+  cursor: pointer;
 
   @media (max-width: 460px) {
     font-size: 17px;
