@@ -20,10 +20,12 @@ import {
   ButtonText,
   PostContainer,
   NoPostsText,
+  ContainerHashtagBox,
+  ContainerPosts,
 } from "./styles";
 import Header from "../../components/Header/Header";
 import { ThreeDots } from "react-loader-spinner";
-
+import HashtagBox from "../../components/Hashtag/hashtagBox";
 
 export function Home() {
   const [isLoading, setIsLoading] = useState(true);
@@ -105,7 +107,7 @@ export function Home() {
       <Header />
       <Title>timeline</Title>
 
-      <FormContainer >
+      <FormContainer>
         <ProfilePicture src={user.pictureURL} />
 
         <NewPostContainer data-test="publish-box">
@@ -144,7 +146,9 @@ export function Home() {
       ) : (
         <PostContainer>
           {posts.length === 0 ? (
-            <NoPostsText data-test="message">There are no posts yet</NoPostsText>
+            <NoPostsText data-test="message">
+              There are no posts yet
+            </NoPostsText>
           ) : (
             posts.map((post) => {
               return (
@@ -170,6 +174,9 @@ export function Home() {
           )}
         </PostContainer>
       )}
+      <ContainerHashtagBox>
+        <HashtagBox />
+      </ContainerHashtagBox>
     </Container>
   );
 }

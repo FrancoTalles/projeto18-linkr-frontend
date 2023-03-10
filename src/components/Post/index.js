@@ -1,5 +1,6 @@
 import { useContext, useEffect, useRef, useState } from "react";
 import { IoTrash, IoPencil, IoHeartOutline, IoHeart } from "react-icons/io5";
+import { ReactTagify } from "react-tagify";
 import { useNavigate } from "react-router-dom";
 import { Tooltip as ReactTooltip } from "react-tooltip";
 import "react-tooltip/dist/react-tooltip.css";
@@ -132,80 +133,27 @@ export function Post({
     setIsModalOpen(isOpen);
   }
 
+  const tagStyle = {
+    color: "white",
+    fontWeight: 700,
+    cursor: "pointer",
+  };
+
+  async function findHashtag(tag) {
+    const hashtag = tag;
+    const semHashtag = hashtag.substring(1);
+
+    try {
+      navigate(`/hashtag/${semHashtag}`);
+    } catch (error) {
+      alert(
+        `An error occurred while trying to go to hashtag ${hashtag}, please try again.`
+      );
+      console.log(error);
+    }
+  }
   function handleNavigateToUser() {
     navigate(`/user/${authorId}`);
-  }
-
-  async function toggleLike() {
-    if (isLiked === false) {
-      try {
-        await api.post(
-          "/likes",
-          {
-            postId: postId,
-            liked: true,
-          },
-          {
-            headers: {
-              Authorization: `Bearer ${user.token}`,
-            },
-          }
-        );
-        setIsLiked(true);
-        getAllPosts(false);
-      } catch (error) {
-        console.log(error);
-      }
-    }
-
-    if (isLiked === true) {
-      try {
-        await api.post(
-          "/likes",
-          {
-            postId: postId,
-            liked: false,
-          },
-          {
-            headers: {
-              Authorization: `Bearer ${user.token}`,
-            },
-          }
-        );
-        if (whoLiked !== undefined && whoLiked !== null) {
-          const names = formatNames(whoLiked, user.username);
-          setLikesName(names);
-        }
-        setIsLiked(false);
-        getAllPosts(false);
-      } catch (error) {
-        console.log(error);
-      }
-    }
-  }
-
-  function formatNames(names, user) {
-    const nameList = names.map((obj) => obj.name);
-    const otherCount = nameList.length - 2;
-    let result;
-
-    if (nameList.includes(user)) {
-      result =
-        nameList.length === 2
-          ? `Você, and ${nameList[1]}`
-          : nameList.length === 1
-          ? `Você`
-          : `Você, ${nameList[1]} and other ${otherCount} people`;
-    } else {
-      result =
-        nameList.length === 2
-          ? `${nameList[0]} and ${nameList[1]}`
-          : nameList.length === 1
-          ? `${nameList[0]}`
-          : `${nameList[0]}, ${nameList[1]} and other ${otherCount} people`;
-    }
-
-    return result;
   }
 
   useEffect(() => {
@@ -265,9 +213,14 @@ export function Post({
                 data-test="edit-input"
               />
             ) : (
-              <PostDescription data-test="description">
-                {postDescription}
-              </PostDescription>
+              <ReactTagify
+                tagStyle={tagStyle}
+                tagClicked={(tag) => findHashtag(tag)}
+              >
+                <PostDescription data-test="description">
+                  {postDescription}
+                </PostDescription>
+              </ReactTagify>
             )}
 
             <PostLink href={link} target="_blank" data-test="link">
