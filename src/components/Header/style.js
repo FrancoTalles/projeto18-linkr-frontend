@@ -61,12 +61,15 @@ export const HeaderStyled = styled.div`
     right: 0;
     width: 150px;
     height: 43px;
-    background: #171717;
+    background-color: #171717;
     border-radius: 0px 0px 0px 20px;
     display: flex;
     justify-content: center;
     align-items: center;
-    p{
+    button{
+      cursor: pointer;
+      border: none;
+      background-color: #171717;
       font-family: 'Lato';
       font-style: normal;
       font-weight: 700;

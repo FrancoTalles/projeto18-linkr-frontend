@@ -9,7 +9,9 @@ export function Users({ setUsers, setName, id, username, userphoto }) {
             <UsersContainer onClick={() => {
                 setName("");
                 setUsers([]);
-            }}>
+            }}
+                data-test="user-search"
+            >
                 <img src={userphoto} />
                 <h1>{username}</h1>
             </UsersContainer>

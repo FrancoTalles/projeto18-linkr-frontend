@@ -6,9 +6,13 @@ import { AuthContext } from "../../contexts/auth.context.js";
 import { api } from "../../services/api.js";
 import { NoPostsText } from "../Home/styles.js";
 import { UserName, UserPageContainer, UserPosts } from "./style.js";
+import { ThreeDots } from "react-loader-spinner";
+
 
 export default function UserPage() {
     const [posts, setPosts] = useState();
+    const [isLoading, setIsLoading] = useState(true);
+
 
     const { user } = useContext(AuthContext);
 
@@ -25,6 +29,7 @@ export default function UserPage() {
             });
 
             setPosts(promise.data);
+            setIsLoading(false);
 
 
         } catch (error) {
@@ -45,27 +50,42 @@ export default function UserPage() {
     return (
         <UserPageContainer>
             <Header />
-            <UserName>
-                <img src={posts?.authorphoto} />
-                <h1>{`${posts?.postauthor} posts`}</h1>
-            </UserName>
-            <UserPosts>
-                {
-                    posts?.postsUser.length === 0 ?
-                        (
-                            <NoPostsText>There are no posts yet</NoPostsText>
-                        ) :
-                        posts?.postsUser.map((post) =>
-                            <Post
-                                key={post.postid}
-                                author={posts.postauthor}
-                                profilePicture={posts.authorphoto}
-                                description={post.postdescription}
-                                link={post.postlink}
-                            />
-                        )
-                }
-            </UserPosts>
+
+            {isLoading ?
+                <UserName>
+                    <NoPostsText>Loading</NoPostsText>
+                    <ThreeDots color="#FFFFFF" width={80} />
+                </UserName>
+                :
+                <>
+                    <UserName>
+                        <img src={posts?.userResult.pictureURL} />
+                        <h1>{`${posts?.userResult.username} posts`}</h1>
+                    </UserName>
+                    <UserPosts>
+                        {
+                            posts?.posts.length === 0 ?
+                                (
+                                    <NoPostsText data-test="message">There are no posts yet</NoPostsText>
+                                ) :
+                                posts?.posts.map((post) =>
+                                    <Post
+                                        key={post.postid}
+                                        postId={post.postid}
+                                        author={post.postauthor}
+                                        profilePicture={post.authorphoto}
+                                        description={post.postdescription}
+                                        link={post.postlink}
+                                        linkTitle={post.linktitle}
+                                        linkDescription={post.linkdescription}
+                                        linkImage={post.linkimage}
+                                    />
+                                )
+                        }
+                    </UserPosts>
+                </>
+            }
+
         </UserPageContainer>
     );
 }

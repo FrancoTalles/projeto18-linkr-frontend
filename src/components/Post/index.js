@@ -2,6 +2,7 @@ import { useContext, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { IoTrash, IoPencil } from "react-icons/io5";
 import { ReactTagify } from "react-tagify";
+import { useNavigate } from "react-router-dom";
 
 import { AuthContext } from "../../contexts/auth.context";
 
@@ -34,6 +35,7 @@ export function Post({
   linkDescription,
   linkImage,
   postId,
+  authorId,
   getAllPosts,
   routeOrigin,
 }) {
@@ -56,7 +58,7 @@ export function Post({
           Authorization: `Bearer ${user.token}`,
         },
       });
-      
+
       getAllPosts(false);
       handleModal(false);
       setIsDeleting(false);
@@ -70,7 +72,6 @@ export function Post({
 
   async function handleEditPost() {
     setIsLoading(true);
-    console.log(postId);
     try {
       await api.put(
         `/posts`,
@@ -143,6 +144,9 @@ export function Post({
       console.log(error);
     }
   }
+  function handleNavigateToUser() {
+    navigate(`/user/${authorId}`);
+  }
 
   return (
     <Container data-test="post">
@@ -153,7 +157,9 @@ export function Post({
           </PhotoLikesContainer>
 
           <PostContainer>
-            <PostAuthor data-test="username">{author}</PostAuthor>
+            <PostAuthor data-test="username" onClick={handleNavigateToUser}>
+              {author}
+            </PostAuthor>
 
             {isEditing ? (
               <LinkInput
