@@ -10,7 +10,6 @@ export const HashtagContainer = styled.div`
 
 export const HashtagLeft = styled.div`
   margin-left: 241px;
-  background-color: yellow;
   display: flex;
   flex-direction: column;
   height: 100%;
