@@ -1,5 +1,6 @@
 import { useContext, useRef, useState } from "react";
 import { IoTrash, IoPencil } from "react-icons/io5";
+import { ReactTagify } from "react-tagify";
 import { useNavigate } from "react-router-dom";
 
 import { AuthContext } from "../../contexts/auth.context";
@@ -56,7 +57,7 @@ export function Post({
           Authorization: `Bearer ${user.token}`,
         },
       });
-      
+
       getAllPosts(false);
       handleModal(false);
       setIsDeleting(false);
@@ -123,8 +124,27 @@ export function Post({
     setIsModalOpen(isOpen);
   }
 
+  const tagStyle = {
+    color: "white",
+    fontWeight: 700,
+    cursor: "pointer",
+  };
+
+  async function findHashtag(tag) {
+    const hashtag = tag;
+    const semHashtag = hashtag.substring(1);
+
+    try {
+      navigate(`/hashtag/${semHashtag}`);
+    } catch (error) {
+      alert(
+        `An error occurred while trying to go to hashtag ${hashtag}, please try again.`
+      );
+      console.log(error);
+    }
+  }
   function handleNavigateToUser() {
-    navigate(`/user/${authorId}`)
+    navigate(`/user/${authorId}`);
   }
 
   return (
@@ -136,7 +156,9 @@ export function Post({
           </PhotoLikesContainer>
 
           <PostContainer>
-            <PostAuthor data-test="username" onClick={handleNavigateToUser}>{author}</PostAuthor>
+            <PostAuthor data-test="username" onClick={handleNavigateToUser}>
+              {author}
+            </PostAuthor>
 
             {isEditing ? (
               <LinkInput
@@ -149,9 +171,14 @@ export function Post({
                 data-test="edit-input"
               />
             ) : (
-              <PostDescription data-test="description">
-                {postDescription}
-              </PostDescription>
+              <ReactTagify
+                tagStyle={tagStyle}
+                tagClicked={(tag) => findHashtag(tag)}
+              >
+                <PostDescription data-test="description">
+                  {postDescription}
+                </PostDescription>
+              </ReactTagify>
             )}
 
             <PostLink href={link} target="_blank" data-test="link">
