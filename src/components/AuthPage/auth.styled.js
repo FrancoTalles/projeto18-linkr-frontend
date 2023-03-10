@@ -1,7 +1,3 @@
-/*Fontes padrão do projeto
-font-family: 'Lato', sans-serif;
-font-family: 'Oswald', sans-serif;
-font-family: 'Passion One', cursive;*/
 import styled from "styled-components";
 
 export const Container = styled.div`
@@ -30,6 +26,24 @@ export const BiggerPart = styled.div`
         font-weight:700;
         font-size: 43px;
         margin-left: 16%;
+    }
+    @media(max-width: 667px){
+        width:100vw;
+        height:26vh;
+        align-items:center;
+        position:fixed;
+        top:0;
+        left:0;
+        z-index:0.1;
+
+        h1{
+            font-size:76px;
+            margin-left: 0;
+        }
+        h3{
+            font-size:23px;
+            margin-left:0;
+        }
     }
 `
 
@@ -70,6 +84,20 @@ export const FormsPart = styled.div`
         border-radius:6px;
         background-color:#1877f2;
     }
+    @media(max-width: 667px){
+        width:100vw;
+        height:74vh;
+        align-items:center;
+        position:fixed;
+        bottom:0;
+        left:0;
+        z-index:0.1;
+        input,button{
+            font-size:22px;
+            width:80vw;
+        }
+    }
+
 `
 
 export const LinkToRedirect = styled.a`
@@ -79,4 +107,7 @@ export const LinkToRedirect = styled.a`
     font-weight:400;
     font-size: 20px;
     margin-top: 2.5vh;
+    @media(max-width: 667px){
+        font-size:17px;
+    }
 `
