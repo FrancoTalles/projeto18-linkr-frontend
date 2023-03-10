@@ -9,7 +9,7 @@ export const HeaderStyled = styled.div`
 
   display: flex;
   justify-content: space-between;
-  align-items: center;
+
   padding: 10px 18px;
 
   background: #151515;
@@ -20,25 +20,26 @@ export const HeaderStyled = styled.div`
     font-size: 49px;
     color: #ffffff;
   }
-  input {
-    height: 45px;
+  
+  input{
+
     width: 563px;
-    border: none;
-    padding: 10px 14px;
+    height: 45px;
     border-radius: 8px;
-
-    font-family: "Lato", sans-serif;
-    font-weight: 400;
-    font-size: 19px;
-
-    ::placeholder {
+    border: none;
+    padding: 0 16px;
+    font-size: 16px;
+    font-weight:400 ;
+    background-color: #FFFFFF;
+    &::placeholder {
       color: #c6c6c6;
+      font-family: 'Lato', sans-serif;
     }
-
     @media (max-width: 425px) {
       display: none;
     }
   }
+
   img {
     width: 53px;
     height: 53px;
@@ -52,5 +53,31 @@ export const HeaderStyled = styled.div`
 
   @media (max-width: 800px) {
     gap: 10px;
+  }
+`;
+
+export const SuggestionsWrapper = styled.div`
+  position: absolute;
+  top: 50px;
+  width: 563px;
+  background-color: #e7e7e7;
+
+  border-radius: 0 0 8px 8px;
+
+  overflow: hidden;
+`;
+
+export const SuggestionsList = styled.ul`
+  list-style: none;
+  margin: 0;
+  padding: 0;
+`;
+
+export const SuggestionItem = styled.li`
+  padding: 12px 16px;
+  font-size: 16px;
+  cursor: pointer;
+  &:hover {
+    background-color: #c7c7c7;
   }
 `;
