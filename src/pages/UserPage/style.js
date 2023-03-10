@@ -82,16 +82,3 @@ export const UserPosts = styled.div`
     }
 `;
 
-export const NoPostsText = styled.p`
-  font-family: "Oswald";
-  font-weight: 400;
-  font-size: 24px;
-  line-height: 36px;
-  color: #FFFFFF;
-
-  @media (max-width: 650px) {
-    width: 100%;
-    text-align: center;
-  }
-
-`;

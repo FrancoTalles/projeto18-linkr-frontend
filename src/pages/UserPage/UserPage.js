@@ -40,14 +40,14 @@ export default function UserPage() {
         }
 
         // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, []);
+    }, [id]);
 
     return (
         <UserPageContainer>
             <Header />
             <UserName>
                 <img src={posts?.authorphoto} />
-                <h1>{posts?.postauthor}</h1>
+                <h1>{`${posts?.postauthor} posts`}</h1>
             </UserName>
             <UserPosts>
                 {
