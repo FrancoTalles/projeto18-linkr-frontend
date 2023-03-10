@@ -36,7 +36,7 @@ export default function HashtagBox() {
   }, []);
   return (
     <HashtagRight>
-      <HashtagsBox>
+      <HashtagsBox data-test="trending">
         <HashtagsBoxTitle>
           <h1>trending</h1>
         </HashtagsBoxTitle>
@@ -50,7 +50,7 @@ export default function HashtagBox() {
               key={index}
               onClick={() => goToHashtag(item.palavra)}
             >
-              <p>{item.palavra}</p>
+              <p data-test="hashtag">{item.palavra}</p>
             </HashtagsRoutes>
           ))
         )}

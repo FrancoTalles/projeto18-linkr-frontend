@@ -55,7 +55,7 @@ export default function Hashtag() {
       <HashtagContainer>
         <HashtagLeft>
           <HashtagTitle>
-            <p># {hashtag}</p>
+            <p data-test="hashtag-title"># {hashtag}</p>
           </HashtagTitle>
           <PostContainer>
             {posts.length === 0 ? (
@@ -75,6 +75,7 @@ export default function Hashtag() {
                     linkTitle={post.linktitle}
                     linkDescription={post.linkdescription}
                     linkImage={post.linkimage}
+                    data-test="post"
                   />
                 );
               })
