@@ -19,9 +19,11 @@ import {
   Button,
   ButtonText,
   PostContainer,
-  NoPostsText
+  NoPostsText,
 } from "./styles";
 import Header from "../../components/Header/Header";
+import { ThreeDots } from "react-loader-spinner";
+
 
 export function Home() {
   const [isLoading, setIsLoading] = useState(true);
@@ -30,18 +32,18 @@ export function Home() {
   const [link, setLink] = useState("");
   const [description, setDescription] = useState("");
 
-  const {user} = useContext(AuthContext);
+  const { user } = useContext(AuthContext);
 
   const navigate = useNavigate();
 
-  console.log(user.token)
+  console.log(user.token);
 
   async function getAllPosts() {
     setIsLoading(true);
     try {
       const postsData = await api.get("/posts", {
         headers: {
-          Authorization: `Bearer a9cb3502-2a6a-4894-ab54-11e5905cb4eb`,
+          Authorization: `Bearer ${user.token}`,
         },
       });
 
@@ -49,23 +51,30 @@ export function Home() {
       setIsLoading(false);
     } catch (error) {
       console.log(error);
-      alert("An error occurred while trying to fetch the posts, please refresh the page")
+      alert(
+        "An error occurred while trying to fetch the posts, please refresh the page"
+      );
     }
   }
 
   async function handleCreatePost(e) {
     e.preventDefault();
     setIsLoadingButton(true);
+    if (link === undefined || link === "") {
+      alert("Please select a link to create a new post");
+      setIsLoadingButton(false);
+      return;
+    }
     try {
       await api.post(
         "/posts",
         {
           link,
-          description
+          description,
         },
         {
           headers: {
-            Authorization: `Bearer a9cb3502-2a6a-4894-ab54-11e5905cb4eb`,
+            Authorization: `Bearer ${user.token}`,
           },
         }
       );
@@ -74,89 +83,88 @@ export function Home() {
       setIsLoadingButton(false);
       getAllPosts();
     } catch (error) {
+      alert("There was an error publishing your link");
       console.log(error);
       setIsLoadingButton(false);
     }
   }
 
-
-
   useEffect(() => {
-    if (!user) {
-      navigate("/")
+    if (user.token.length === 0) {
+      navigate("/");
     } else {
       getAllPosts();
     }
-    
+
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
-
-
 
   return (
     <Container>
       <Header />
       <Title>timeline</Title>
 
-      <FormContainer>
-        <ProfilePicture src="http://c.files.bbci.co.uk/17444/production/_124800359_gettyimages-817514614.jpg" />
+      <FormContainer data-test="publish-box">
+        <ProfilePicture src={user.pictureURL} />
 
         <NewPostContainer>
           <ContainerTitle>What are you going to share today?</ContainerTitle>
 
-          <LinkInput 
+          <LinkInput
             placeholder="http://..."
             value={link}
             onChange={(e) => setLink(e.target.value)}
             disabled={isLoadingButton}
+            data-test="link"
           />
 
-          <DescriptionInput 
+          <DescriptionInput
             placeholder="Awesome article about #javascript"
             value={description}
             onChange={(e) => setDescription(e.target.value)}
             disabled={isLoadingButton}
+            data-test="description"
           />
           <div>
             <Button>
-              <ButtonText onClick={handleCreatePost}>Publish</ButtonText>
+              <ButtonText onClick={handleCreatePost} data-test="publish-btn">
+                {isLoadingButton ? <p>Publishing...</p> : <p>Publish</p>}
+              </ButtonText>
             </Button>
           </div>
         </NewPostContainer>
       </FormContainer>
 
-      
-        {
-          isLoading ?
-          <PostContainer>
+      {isLoading ? (
+        <PostContainer>
           <NoPostsText>Loading</NoPostsText>
-          </PostContainer>
-          :
-          (
-            <PostContainer>
-              {
-                posts.length === 0 ?
-                (
-                  <NoPostsText>There are no posts yet</NoPostsText>
-                )
-                :
-                posts.map(post => {
-                  return (
-                    <Post
-                    key={post.postid}   
-                    author={post.postauthor}
-                    profilePicture={post.authorphoto}
-                    description={post.postdescription}
-                    link={post.postlink}
-                    />
-                  )
-                })
-              }
-              
-            </PostContainer>
-          )
-        }
-      
+          <ThreeDots color="#FFFFFF" width={80}/>
+        </PostContainer>
+      ) : (
+        <PostContainer>
+          {posts.length === 0 ? (
+            <NoPostsText data-test="message">There are no posts yet</NoPostsText>
+          ) : (
+            posts.map((post) => {
+              return (
+                <Post
+                  key={post.postid}
+                  postId={post.postid}
+                  author={post.postauthor}
+                  profilePicture={post.authorphoto}
+                  description={post.postdescription}
+                  link={post.postlink}
+                  linkTitle={post.linktitle}
+                  linkDescription={post.linkdescription}
+                  linkImage={post.linkimage}
+                  getAllPosts={getAllPosts}
+                  routeOrigin={"/timeline"}
+                />
+              );
+            })
+          )}
+        </PostContainer>
+      )}
     </Container>
   );
 }
