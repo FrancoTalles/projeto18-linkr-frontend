@@ -12,6 +12,9 @@ function App() {
         <Routes>
           <Route path="/sign-up" element={<SignUp />} />
           <Route path="/" element={<SignIn />} />
+          <Route path="/timeline" element={<Home />} />
+          <Route path="/user/:id" element={<UserPage />} />
+          <Route path="/hashtag/:hashtag" element={<Hashtag />} />
         </Routes>
       </BrowserRouter>
     </AuthProvider>

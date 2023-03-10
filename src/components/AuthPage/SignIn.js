@@ -24,7 +24,7 @@ export default function SignIn() {
                 const { token, pictureURL, username } = res.data;
                 setUser({ token, pictureURL, username })
                 localStorage.setItem("user", JSON.stringify({ token, pictureURL, username }))
-                //navigate("/timeline")
+                navigate("/timeline")
             }).catch(err => {
                 setIsLoading(false);
                 alert(err.response.data)
