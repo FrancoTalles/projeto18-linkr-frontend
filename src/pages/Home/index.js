@@ -36,8 +36,6 @@ export function Home() {
 
   const navigate = useNavigate();
 
-  console.log(user.token);
-
   async function getAllPosts(isFirstLoad) {
     if (isFirstLoad) {
       setIsLoading(true);
@@ -154,6 +152,7 @@ export function Home() {
                   key={post.postid}
                   postId={post.postid}
                   author={post.postauthor}
+                  authorId={post.userid}
                   profilePicture={post.authorphoto}
                   description={post.postdescription}
                   link={post.postlink}

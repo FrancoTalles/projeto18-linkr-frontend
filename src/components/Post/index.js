@@ -1,5 +1,6 @@
 import { useContext, useRef, useState } from "react";
 import { IoTrash, IoPencil } from "react-icons/io5";
+import { useNavigate } from "react-router-dom";
 
 import { AuthContext } from "../../contexts/auth.context";
 
@@ -32,6 +33,7 @@ export function Post({
   linkDescription,
   linkImage,
   postId,
+  authorId,
   getAllPosts,
   routeOrigin,
 }) {
@@ -43,6 +45,8 @@ export function Post({
   const descRef = useRef(null);
 
   const { user } = useContext(AuthContext);
+
+  const navigate = useNavigate();
 
   async function handleDeletePost() {
     setIsDeleting(true);
@@ -66,7 +70,6 @@ export function Post({
 
   async function handleEditPost() {
     setIsLoading(true);
-    console.log(postId);
     try {
       await api.put(
         `/posts`,
@@ -120,6 +123,10 @@ export function Post({
     setIsModalOpen(isOpen);
   }
 
+  function handleNavigateToUser() {
+    navigate(`/user/${authorId}`)
+  }
+
   return (
     <Container data-test="post">
       {!isDeleting && (
@@ -129,7 +136,7 @@ export function Post({
           </PhotoLikesContainer>
 
           <PostContainer>
-            <PostAuthor data-test="username">{author}</PostAuthor>
+            <PostAuthor data-test="username" onClick={handleNavigateToUser}>{author}</PostAuthor>
 
             {isEditing ? (
               <LinkInput
