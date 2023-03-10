@@ -1,5 +1,5 @@
 import axios from "axios";
-//Verificar como deixar essa baseURL no .env, que no meu ele não achou automaticamente
+
 const baseURL=process.env.REACT_APP_API_URL;
 
 function submitSignUp(body){
