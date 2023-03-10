@@ -156,10 +156,82 @@ export function Post({
     navigate(`/user/${authorId}`);
   }
 
+  async function toggleLike() {
+    if (isLiked === false) {
+      try {
+        await api.post(
+          "/likes",
+          {
+            postId: postId,
+            liked: true,
+          },
+          {
+            headers: {
+              Authorization: `Bearer ${user.token}`,
+            },
+          }
+        );
+        setIsLiked(true);
+        getAllPosts(false);
+      } catch (error) {
+        console.log(error);
+      }
+    }
+
+    if (isLiked === true) {
+      try {
+        await api.post(
+          "/likes",
+          {
+            postId: postId,
+            liked: false,
+          },
+          {
+            headers: {
+              Authorization: `Bearer ${user.token}`,
+            },
+          }
+        );
+        if (whoLiked !== undefined && whoLiked !== null) {
+          const names = formatNames(whoLiked, user.username);
+          setLikesName(names);
+        }
+        setIsLiked(false);
+        getAllPosts(false);
+      } catch (error) {
+        console.log(error);
+      }
+    }
+  }
+
+  function formatNames(names, user) {
+    const nameList = names.map((obj) => obj.name);
+    const otherCount = nameList.length - 2;
+    let result;
+
+    if (nameList.includes(user)) {
+      result =
+        nameList.length === 2
+          ? `Você, and ${nameList[1]}`
+          : nameList.length === 1
+          ? `Você`
+          : `Você, ${nameList[1]} and other ${otherCount} people`;
+    } else {
+      result =
+        nameList.length === 2
+          ? `${nameList[0]} and ${nameList[1]}`
+          : nameList.length === 1
+          ? `${nameList[0]}`
+          : `${nameList[0]}, ${nameList[1]} and other ${otherCount} people`;
+    }
+
+    return result;
+  }
+
   useEffect(() => {
     if (whoLiked !== undefined && whoLiked !== null) {
       const names = formatNames(whoLiked, user.username);
-      setLikesName(names);
+      setLikesName(names); 
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isLiked]);
