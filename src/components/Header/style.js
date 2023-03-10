@@ -7,6 +7,7 @@ export const HeaderStyled = styled.div`
   position: fixed;
   left: 0px;
   top: 0px;
+  z-index: 2;
 
   display: flex;
   justify-content: space-between;
