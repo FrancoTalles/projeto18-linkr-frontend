@@ -231,7 +231,7 @@ export function Post({
   useEffect(() => {
     if (whoLiked !== undefined && whoLiked !== null) {
       const names = formatNames(whoLiked, user.username);
-      setLikesName(names);
+      setLikesName(names); 
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isLiked]);
