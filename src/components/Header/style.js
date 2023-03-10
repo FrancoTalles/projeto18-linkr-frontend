@@ -1,9 +1,10 @@
 import styled from "styled-components";
 
 export const HeaderStyled = styled.div`
+
   width: 100%;
   height: 72px;
-  position: absolute;
+  position: fixed;
   left: 0px;
   top: 0px;
 
@@ -15,6 +16,7 @@ export const HeaderStyled = styled.div`
   background: #151515;
 
   h1 {
+    cursor: pointer;
     font-family: "Passion One", cursive;
     font-weight: 700;
     font-size: 49px;

@@ -71,6 +71,7 @@ export default function UserPage() {
                                 posts?.posts.map((post) =>
                                     <Post
                                         key={post.postid}
+                                        authorId={post.userid}
                                         postId={post.postid}
                                         author={post.postauthor}
                                         profilePicture={post.authorphoto}

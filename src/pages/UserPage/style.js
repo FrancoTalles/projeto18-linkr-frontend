@@ -18,6 +18,8 @@ export const UserName = styled.div`
     width: 611px;
     height: 70px;
 
+    gap:10px;
+
     display: flex;
     justify-content: flex-start;
     align-items: center;
