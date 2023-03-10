@@ -1,12 +1,12 @@
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { GlobalStyle } from "./globalStyles.js";
 import AuthProvider from "./contexts/auth.context.js";
-import SignUp from "../src/components/SignUp.js";
-import SignIn from "./components/SignIn.js";
+import SignUp from "../src/components/AuthPage/SignUp.js";
+import SignIn from "../src/components/AuthPage/SignIn.js";
 import { Home } from "./pages/Home/index.js";
 import Hashtag from "./pages/Hashtag/hashtag.js";
 import UserPage from "./pages/UserPage/UserPage.js";
-//Quem estiver fazendo a rota timeline, por favor remove o comentário no components SingIn quando recebe a resposta da promise por favor.
+
 function App() {
   return (<>
     <GlobalStyle />

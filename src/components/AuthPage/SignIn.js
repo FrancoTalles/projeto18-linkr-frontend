@@ -1,13 +1,16 @@
 import { useNavigate } from 'react-router-dom';
-import { useState } from "react";
-import { Container, LinkToRedirect, BiggerPart, FormsPart } from "../styled/auth.styled.js";
-import apiAuth from '../services/api.auth.js';
+import { useState, useContext } from "react";
+import { Container, LinkToRedirect, BiggerPart, FormsPart } from "./auth.styled.js";
+import apiAuth from "../../services/api.auth.js";
+import { AuthContext } from '../../contexts/auth.context.js';
 import { PropagateLoader } from "react-spinners";
 
-export default function SignUp() {
+export default function SignIn() {
     const navigate = useNavigate();
-    const [formInfo, setFormInfo] = useState({ email: '', password: '', username: '', pictureURL: '' });
+    const [formInfo, setFormInfo] = useState({ email: '', password: '' });
+    const { setUser } = useContext(AuthContext);
     const [isLoading, setIsLoading] = useState(false);
+
     function handleForm(e) {
         setFormInfo({ ...formInfo, [e.target.name]: e.target.value });
     }
@@ -15,10 +18,13 @@ export default function SignUp() {
     function handleSubmit(e) {
         e.preventDefault();
         setIsLoading(true);
-        apiAuth.submitSignUp(formInfo)
+        apiAuth.submitSignIn(formInfo)
             .then(res => {
                 setIsLoading(false);
-                navigate("/")
+                const { token, pictureURL, username } = res.data;
+                setUser({ token, pictureURL, username })
+                localStorage.setItem("user", JSON.stringify({ token, pictureURL, username }))
+                navigate("/timeline")
             }).catch(err => {
                 setIsLoading(false);
                 alert(err.response.data)
@@ -51,32 +57,13 @@ export default function SignUp() {
                         focus="true"
                         data-test="password"
                     />
-                    <input
-                        type="text"
-                        name="username"
-                        placeholder="username"
-                        onChange={handleForm}
-                        value={formInfo.username}
-                        focus="true"
-                        data-test="username"
-                    />
-                    <input
-                        type="text"
-                        name="pictureURL"
-                        placeholder="picture url"
-                        onChange={handleForm}
-                        value={formInfo.pictureURL}
-                        focus="true"
-                        data-test="picture-url"
-                    />
-                    <button type="submit" disabled={isLoading} data-test="sign-up-btn">
-                        {isLoading ? (<PropagateLoader color="#ffffff" size={10} speedMultiplier={0.6} />) : "Sign Up"}
-                    </button>
+                    <button type="submit" disabled={isLoading} data-test="login-btn">Log In</button>
                 </form>
                 <LinkToRedirect
-                    onClick={() => navigate("/")}
-                    data-test="login-link">
-                    Switch back to log in
+                    onClick={() => navigate("/sign-up")}
+                    data-test="sign-up-link">
+                    {isLoading ? (<PropagateLoader color="#ffffff" size={10} speedMultiplier={0.6} />) : "First time? Create an account!"}
+
                 </LinkToRedirect>
             </FormsPart>
         </Container>

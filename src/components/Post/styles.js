@@ -41,6 +41,18 @@ export const PostContainer = styled.div`
   }
 `;
 
+export const LinkInput = styled.input`
+  background-color: #efefef;
+  border: none;
+  border-radius: 5px;
+  height: 30px;
+  padding-left: 13px;
+
+  ::placeholder {
+    color: #949494;
+  }
+`;
+
 export const PostAuthor = styled.p`
   font-family: "Lato";
   font-weight: 400;
