@@ -104,10 +104,10 @@ export function Home() {
       <Header />
       <Title>timeline</Title>
 
-      <FormContainer data-test="publish-box">
+      <FormContainer >
         <ProfilePicture src={user.pictureURL} />
 
-        <NewPostContainer>
+        <NewPostContainer data-test="publish-box">
           <ContainerTitle>What are you going to share today?</ContainerTitle>
 
           <LinkInput
