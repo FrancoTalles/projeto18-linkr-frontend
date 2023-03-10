@@ -40,7 +40,7 @@ export function Home() {
     if (isFirstLoad) {
       setIsLoading(true);
     }
-    
+
     try {
       const postsData = await api.get("/posts", {
         headers: {
@@ -139,7 +139,7 @@ export function Home() {
       {isLoading ? (
         <PostContainer>
           <NoPostsText>Loading</NoPostsText>
-          <ThreeDots color="#FFFFFF" width={80}/>
+          <ThreeDots color="#FFFFFF" width={80} />
         </PostContainer>
       ) : (
         <PostContainer>

@@ -38,6 +38,10 @@ export const HeaderStyled = styled.div`
     @media (max-width: 425px) {
       display: none;
     }
+    @media (max-width: 800px) {
+      width: 100%;
+      
+    }
   }
 
   img {
@@ -48,6 +52,30 @@ export const HeaderStyled = styled.div`
     @media (max-width: 460px) {
       width: 44px;
       height: 44px;
+    }
+  }
+  .logout{
+    cursor: pointer;
+    position: fixed;
+    top: 70px;
+    right: 0;
+    width: 150px;
+    height: 43px;
+    background-color: #171717;
+    border-radius: 0px 0px 0px 20px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    button{
+      cursor: pointer;
+      border: none;
+      background-color: #171717;
+      font-family: 'Lato';
+      font-style: normal;
+      font-weight: 700;
+      font-size: 15px;
+
+      color: #FFFFFF;
     }
   }
 
@@ -65,9 +93,16 @@ export const SuggestionsWrapper = styled.div`
   border-radius: 0 0 8px 8px;
 
   overflow: hidden;
+  @media (max-width: 800px) {
+    width: 239px;
+  }
+  @media (max-width: 465px){
+    display: none;
+  }
 `;
 
 export const SuggestionsList = styled.ul`
+  width: 100%;
   list-style: none;
   margin: 0;
   padding: 0;
@@ -80,4 +115,12 @@ export const SuggestionItem = styled.li`
   &:hover {
     background-color: #c7c7c7;
   }
+`;
+
+export const Logout = styled.div`
+  gap : 3px;
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+
 `;

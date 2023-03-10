@@ -1,17 +1,30 @@
-import { useEffect, useState } from "react";
-import { HeaderStyled, Icon, SuggestionsList, SuggestionsWrapper } from "./style";
+import { useContext, useEffect, useState } from "react";
+import { HeaderStyled, Logout, SuggestionsList, SuggestionsWrapper } from "./style";
 import { DebounceInput } from 'react-debounce-input';
 import { api } from "../../services/api.js";
 import { Users } from "../Users/Users";
+import { AuthContext } from "../../contexts/auth.context";
+import { IoChevronDown, IoChevronUp } from "react-icons/io5";
+import { useNavigate } from "react-router-dom";
 
 
 
 export default function Header() {
+
+    const { user } = useContext(AuthContext);
+
     const [name, setName] = useState("");
 
     const [users, setUsers] = useState([]);
 
-    console.log(name);
+    const [logout, setLogout] = useState(false);
+
+    const navigate = useNavigate();
+
+    function handleLogOut() {
+        localStorage.clear();
+        navigate("/");
+    };
 
     async function searchUsers(name) {
         if (name.length === 0) {
@@ -21,7 +34,7 @@ export default function Header() {
         try {
             const promise = await api.get(`/users/${name}`, {
                 headers: {
-                    Authorization: `Bearer a9cb3502-2a6a-4894-ab54-11e5905cb4eb`,
+                    Authorization: `Bearer ${user.token}`,
                 },
             });
 
@@ -33,6 +46,9 @@ export default function Header() {
     }
 
     useEffect(() => {
+        if (!user.token) {
+            navigate("/");
+        }
 
         searchUsers(name);
 
@@ -50,6 +66,7 @@ export default function Header() {
                     minLength={3}
                     debounceTimeout={300}
                     onChange={(e) => setName(e.target.value)}
+                    data-test="search"
                 />
 
                 {users.length > 0 && (
@@ -70,9 +87,23 @@ export default function Header() {
                 )}
 
             </div>
+            <Logout onClick={() => setLogout(!logout)}>
+                {!logout ?
+                    <IoChevronDown
+                        cursor="pointer"
+                    />
+                    :
+                    <IoChevronUp
+                    />
+                }
+                <img src={user.pictureURL} data-test="avatar" />
+            </Logout>
 
-            <img src="https://img.r7.com/images/meme-sorriso-forcado-hide-the-pain-harold-maurice-andras-arato-08112019141226221?dimensions=771x420&no_crop=true" />
-
+            {logout && (
+                <div className="logout" onClick={() => handleLogOut()} data-test="menu">
+                    <button data-test="logout">Logout</button>
+                </div>
+            )}
         </HeaderStyled>
     );
 }
