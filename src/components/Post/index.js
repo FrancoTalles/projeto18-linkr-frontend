@@ -167,7 +167,7 @@ export function Post({
               <IoTrash
                 onClick={() => handleModal(true)}
                 cursor="pointer"
-                data-test="delete-btn"                
+                data-test="delete-btn"
               />
             </IconsContainer>
           )}
