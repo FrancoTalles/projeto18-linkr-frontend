@@ -1,5 +1,7 @@
 import { useContext, useRef, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { IoTrash, IoPencil } from "react-icons/io5";
+import { ReactTagify } from "react-tagify";
 
 import { AuthContext } from "../../contexts/auth.context";
 
@@ -43,6 +45,8 @@ export function Post({
   const descRef = useRef(null);
 
   const { user } = useContext(AuthContext);
+
+  const navigate = useNavigate();
 
   async function handleDeletePost() {
     setIsDeleting(true);
@@ -118,6 +122,26 @@ export function Post({
     setIsModalOpen(isOpen);
   }
 
+  const tagStyle = {
+    color: "white",
+    fontWeight: 700,
+    cursor: "pointer",
+  };
+
+  async function findHashtag(tag) {
+    const hashtag = tag;
+    const semHashtag = hashtag.substring(1);
+
+    try {
+      navigate(`/hashtag/${semHashtag}`);
+    } catch (error) {
+      alert(
+        `An error occurred while trying to go to hashtag ${hashtag}, please try again.`
+      );
+      console.log(error);
+    }
+  }
+
   return (
     <>
       {!isDeleting && (
@@ -140,9 +164,14 @@ export function Post({
                 data-test="edit-input"
               />
             ) : (
-              <PostDescription data-test="description">
-                {postDescription}
-              </PostDescription>
+              <ReactTagify
+                tagStyle={tagStyle}
+                tagClicked={(tag) => findHashtag(tag)}
+              >
+                <PostDescription data-test="description">
+                  {postDescription}
+                </PostDescription>
+              </ReactTagify>
             )}
 
             <PostLink href={link} target="_blank" data-test="link">
