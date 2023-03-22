@@ -171,6 +171,7 @@ export function Post({
             },
           }
         );
+
         setIsLiked(true);
         getAllPosts(false);
       } catch (error) {
@@ -192,10 +193,7 @@ export function Post({
             },
           }
         );
-        if (whoLiked !== undefined && whoLiked !== null) {
-          const names = formatNames(whoLiked, user.username);
-          setLikesName(names);
-        }
+
         setIsLiked(false);
         getAllPosts(false);
       } catch (error) {
@@ -205,17 +203,28 @@ export function Post({
   }
 
   function formatNames(names, user) {
+    let result;
+    if (names === null && isLiked === false) {
+      result = "";
+
+      return result;
+    } else if (names === null && isLiked === true) {
+      result = "Você";
+
+      return result;
+    }
     const nameList = names.map((obj) => obj.name);
     const otherCount = nameList.length - 2;
-    let result;
 
     if (nameList.includes(user)) {
       result =
         nameList.length === 2
-          ? `Você, and ${nameList[1]}`
+          ? `Você, and ${nameList[0] === user ? nameList[1] : nameList[0]}`
           : nameList.length === 1
           ? `Você`
-          : `Você, ${nameList[1]} and other ${otherCount} people`;
+          : `Você, ${
+              nameList[0] === user ? nameList[1] : nameList[0]
+            } and other ${otherCount} people`;
     } else {
       result =
         nameList.length === 2
@@ -229,12 +238,11 @@ export function Post({
   }
 
   useEffect(() => {
-    if (whoLiked !== undefined && whoLiked !== null) {
-      const names = formatNames(whoLiked, user.username);
-      setLikesName(names); 
-    }
+    const names = formatNames(whoLiked, user.username);
+    setLikesName(names);
+
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [isLiked]);
+  }, [getAllPosts]);
 
   return (
     <Container data-test="post">
@@ -251,21 +259,23 @@ export function Post({
                   data-test="like-btn"
                 />
               ) : (
-                <IoHeartOutline 
-                  onClick={toggleLike}
-                  data-test="like-btn"
-                />
+                <IoHeartOutline onClick={toggleLike} data-test="like-btn" />
               )}
 
               <p
                 data-tooltip-id="my-tooltip"
                 data-tooltip-variant="light"
                 data-tooltip-content={likesName}
-                data-test="tooltip"
+                data-test="counter"
               >
-                {likeCount} likes
+                {likeCount} {+likeCount === 1 ? "like" : "likes"}
               </p>
-              <ReactTooltip id="my-tooltip" effect="solid" place="bottom" />
+              <ReactTooltip
+                id="my-tooltip"
+                effect="solid"
+                place="bottom"
+                data-test="tooltip"
+              />
             </LikeContainer>
           </PhotoLikesContainer>
 
