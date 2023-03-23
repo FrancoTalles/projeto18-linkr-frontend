@@ -1,5 +1,11 @@
 import { useContext, useEffect, useRef, useState } from "react";
-import { IoTrash, IoPencil, IoHeartOutline, IoHeart } from "react-icons/io5";
+import {
+  IoTrash,
+  IoPencil,
+  IoHeartOutline,
+  IoHeart,
+  IoRepeatOutline,
+} from "react-icons/io5";
 import { ReactTagify } from "react-tagify";
 import { useNavigate } from "react-router-dom";
 import { Tooltip as ReactTooltip } from "react-tooltip";
@@ -26,6 +32,8 @@ import {
   IconsContainer,
   LinkInput,
   LikeContainer,
+  RepostContainer,
+  InnerContainer
 } from "./styles";
 
 export function Post({
@@ -51,6 +59,8 @@ export function Post({
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isLiked, setIsLiked] = useState(liked);
   const [likesName, setLikesName] = useState();
+
+  const testRepost = true;
 
   const descRef = useRef(null);
 
@@ -245,9 +255,19 @@ export function Post({
   }, [getAllPosts]);
 
   return (
+    <>
+    {!isLiked ? (
+        ""
+      ) : (
+        <RepostContainer>
+          <IoRepeatOutline size={18} />
+          <p>Re-posted by {true ? "you" : "name"}</p>
+        </RepostContainer>
+      )}
     <Container data-test="post">
+      
       {!isDeleting && (
-        <>
+        <InnerContainer>
           <PhotoLikesContainer>
             <ProfilePicture src={profilePicture} />
 
@@ -276,6 +296,13 @@ export function Post({
                 place="bottom"
                 data-test="tooltip"
               />
+            </LikeContainer>
+
+            <LikeContainer>
+              <IoRepeatOutline size={18} data-test="repost-btn"/>
+              <p data-test="repost-counter">
+                {likeCount} {+likeCount === 1 ? "re-post" : "re-posts"}
+              </p>
             </LikeContainer>
           </PhotoLikesContainer>
 
@@ -317,7 +344,7 @@ export function Post({
             </PostLink>
           </PostContainer>
 
-          {user.username === author && routeOrigin === "/timeline" && (
+          {user.username === author && routeOrigin === "/timeline" && !testRepost && (
             <IconsContainer>
               <IoPencil
                 onClick={handleEditClick}
@@ -331,7 +358,7 @@ export function Post({
               />
             </IconsContainer>
           )}
-        </>
+        </InnerContainer>
       )}
       <Modal
         isModalOpen={isModalOpen}
@@ -343,5 +370,6 @@ export function Post({
         confirmText="Yes, delete it"
       />
     </Container>
+    </>
   );
 }

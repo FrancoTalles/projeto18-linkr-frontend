@@ -4,6 +4,7 @@ export const Container = styled.div`
   width: 610px;
   display: flex;
   padding: 15px;
+  flex-direction: column;
   border-radius: 16px;
   background-color: #171717;
   gap: 16px;
@@ -39,14 +40,14 @@ export const LikeContainer = styled.div`
 
   p {
     text-align: center;
-    font-family: 'Lato';
+    font-family: "Lato";
 
-font-weight: 400;
-font-size: 11px;
-line-height: 13px;
-text-align: center;
+    font-weight: 400;
+    font-size: 11px;
+    line-height: 13px;
+    text-align: center;
 
-color: #FFFFFF;
+    color: #ffffff;
   }
 `;
 
@@ -54,6 +55,7 @@ export const PostContainer = styled.div`
   display: flex;
   flex-direction: column;
   gap: 7px;
+  z-index: 1;
 
   @media (max-width: 650px) {
     width: 100%;
@@ -174,4 +176,23 @@ export const IconsContainer = styled.div`
   gap: 12px;
   top: 16px;
   right: 16px;
+`;
+
+export const RepostContainer = styled.div`
+  min-height: 42px;
+  width: 100%;
+  color: #ffffff;
+  display: flex;
+  gap: 4px;
+  border-radius: 16px 16px 0 0;
+  align-items: center;
+  padding-left: 10px;
+  margin-bottom: -27px;
+  background-color: #1e1e1e;
+  padding-bottom: 8px;
+`;
+
+export const InnerContainer = styled.div`
+  display: flex;  
+  gap: 6px
 `;
