@@ -1,7 +1,7 @@
 import { Link } from "react-router-dom";
 import { UsersContainer } from "./style";
 
-export function Users({ setUsers, setName, id, username, userphoto }) {
+export function Users({ setUsers, setName, id, username, userphoto, isfollowed }) {
 
 
     return (
@@ -14,6 +14,11 @@ export function Users({ setUsers, setName, id, username, userphoto }) {
             >
                 <img src={userphoto} />
                 <h1>{username}</h1>
+                {isfollowed ?
+                    <p>• following</p>
+                    :
+                    ""
+                }
             </UsersContainer>
         </Link>
 
