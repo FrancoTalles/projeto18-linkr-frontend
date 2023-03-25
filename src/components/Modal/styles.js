@@ -5,6 +5,7 @@ export const Container = styled(Modal)`
   width: 100%;
   height: 100%;
   position: relative;
+  z-index: 9999;
 `;
 
 export const InnerContainer = styled.div`

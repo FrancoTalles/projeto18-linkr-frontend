@@ -153,7 +153,7 @@ export function Home() {
             posts.map((post) => {
               return (
                 <Post
-                  key={post.postid}
+                  key={Math.random()}
                   postId={post.postid}
                   author={post.postauthor}
                   authorId={post.userid}
@@ -168,6 +168,9 @@ export function Home() {
                   liked={post.liked}
                   likeCount={post.likescount}
                   whoLiked={post.wholiked}
+                  isReshare={post.reshareid ? true : false}
+                  resharer={post.reshareauthor}
+                  resharesCount={post.resharescount}
                 />
               );
             })

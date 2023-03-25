@@ -33,7 +33,7 @@ import {
   LinkInput,
   LikeContainer,
   RepostContainer,
-  InnerContainer
+  InnerContainer,
 } from "./styles";
 
 export function Post({
@@ -51,16 +51,19 @@ export function Post({
   liked,
   likeCount,
   whoLiked,
+  isReshare,
+  resharer,
+  resharesCount,
 }) {
   const [isEditing, setIsEditing] = useState();
   const [postDescription, setPostDescription] = useState(description);
   const [isLoading, setIsLoading] = useState(false);
   const [isDeleting, setIsDeleting] = useState(false);
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isReshareModalOpen, setIsReshareModalOpen] = useState(false);
+  const [isResharing, setIsResharing] = useState(false);
   const [isLiked, setIsLiked] = useState(liked);
   const [likesName, setLikesName] = useState();
-
-  const testRepost = true;
 
   const descRef = useRef(null);
 
@@ -139,8 +142,38 @@ export function Post({
     }
   }
 
+  async function handleResharePost() {
+    setIsResharing(true);
+    try {
+      await api.post(
+        `/repost`,
+        {
+          postId: postId,
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${user.token}`,
+          },
+        }
+      );
+
+      getAllPosts(true);
+      handleReshareModal(false);
+      setIsResharing(false);
+    } catch (error) {
+      setIsResharing(false);
+      handleReshareModal(false);
+      alert("Unable to re-share post, please try again later.");
+      console.log(error);
+    }
+  }
+
   function handleModal(isOpen) {
     setIsModalOpen(isOpen);
+  }
+
+  function handleReshareModal(isOpen) {
+    setIsReshareModalOpen(isOpen);
   }
 
   const tagStyle = {
@@ -256,120 +289,137 @@ export function Post({
 
   return (
     <>
-    {!isLiked ? (
+      {!isReshare ? (
         ""
       ) : (
         <RepostContainer>
           <IoRepeatOutline size={18} />
-          <p>Re-posted by {true ? "you" : "name"}</p>
+          <p>Re-posted by <span>{resharer === user.username ? "you" : resharer}</span></p>
         </RepostContainer>
       )}
-    <Container data-test="post">
-      
-      {!isDeleting && (
-        <InnerContainer>
-          <PhotoLikesContainer>
-            <ProfilePicture src={profilePicture} />
+      <Container data-test="post">
+        {!isDeleting && (
+          <InnerContainer>
+            <PhotoLikesContainer>
+              <ProfilePicture src={profilePicture} />
 
-            <LikeContainer>
-              {liked ? (
-                <IoHeart
-                  color="red"
-                  onClick={toggleLike}
-                  data-test="like-btn"
+              <LikeContainer>
+                {liked ? (
+                  <IoHeart
+                    color="red"
+                    onClick={toggleLike}
+                    data-test="like-btn"
+                  />
+                ) : (
+                  <IoHeartOutline onClick={toggleLike} data-test="like-btn" />
+                )}
+
+                <p
+                  data-tooltip-id="my-tooltip"
+                  data-tooltip-variant="light"
+                  data-tooltip-content={likesName}
+                  data-test="counter"
+                >
+                  {likeCount} {+likeCount === 1 ? "like" : "likes"}
+                </p>
+                <ReactTooltip
+                  id="my-tooltip"
+                  effect="solid"
+                  place="bottom"
+                  data-test="tooltip"
+                />
+              </LikeContainer>
+
+              <LikeContainer>
+                <IoRepeatOutline
+                  size={18}
+                  data-test="repost-btn"
+                  onClick={() => handleReshareModal(true)}
+                />
+                <p data-test="repost-counter">
+                  {resharesCount}{" "}
+                  {+resharesCount === 1 ? "re-post" : "re-posts"}
+                </p>
+              </LikeContainer>
+            </PhotoLikesContainer>
+
+            <PostContainer>
+              <PostAuthor>
+                <span data-test="username" onClick={handleNavigateToUser}>
+                  {author}
+                </span>
+              </PostAuthor>
+
+              {isEditing ? (
+                <LinkInput
+                  value={postDescription}
+                  ref={descRef}
+                  onChange={(e) => setPostDescription(e.target.value)}
+                  onKeyDown={handleKeyPressed}
+                  disabled={isLoading}
+                  autoFocus
+                  data-test="edit-input"
                 />
               ) : (
-                <IoHeartOutline onClick={toggleLike} data-test="like-btn" />
+                <ReactTagify
+                  tagStyle={tagStyle}
+                  tagClicked={(tag) => findHashtag(tag)}
+                >
+                  <PostDescription data-test="description">
+                    {postDescription}
+                  </PostDescription>
+                </ReactTagify>
               )}
 
-              <p
-                data-tooltip-id="my-tooltip"
-                data-tooltip-variant="light"
-                data-tooltip-content={likesName}
-                data-test="counter"
-              >
-                {likeCount} {+likeCount === 1 ? "like" : "likes"}
-              </p>
-              <ReactTooltip
-                id="my-tooltip"
-                effect="solid"
-                place="bottom"
-                data-test="tooltip"
-              />
-            </LikeContainer>
+              <PostLink href={link} target="_blank" data-test="link">
+                <div>
+                  <LinkTitle>{linkTitle}</LinkTitle>
+                  <LinkDescription>{linkDescription}</LinkDescription>
 
-            <LikeContainer>
-              <IoRepeatOutline size={18} data-test="repost-btn"/>
-              <p data-test="repost-counter">
-                {likeCount} {+likeCount === 1 ? "re-post" : "re-posts"}
-              </p>
-            </LikeContainer>
-          </PhotoLikesContainer>
+                  <LinkUrl>{link}</LinkUrl>
+                </div>
 
-          <PostContainer>
-            <PostAuthor data-test="username" onClick={handleNavigateToUser}>
-              {author}
-            </PostAuthor>
+                <LinkImage src={linkImage} />
+              </PostLink>
+            </PostContainer>
 
-            {isEditing ? (
-              <LinkInput
-                value={postDescription}
-                ref={descRef}
-                onChange={(e) => setPostDescription(e.target.value)}
-                onKeyDown={handleKeyPressed}
-                disabled={isLoading}
-                autoFocus
-                data-test="edit-input"
-              />
-            ) : (
-              <ReactTagify
-                tagStyle={tagStyle}
-                tagClicked={(tag) => findHashtag(tag)}
-              >
-                <PostDescription data-test="description">
-                  {postDescription}
-                </PostDescription>
-              </ReactTagify>
-            )}
-
-            <PostLink href={link} target="_blank" data-test="link">
-              <div>
-                <LinkTitle>{linkTitle}</LinkTitle>
-                <LinkDescription>{linkDescription}</LinkDescription>
-
-                <LinkUrl>{link}</LinkUrl>
-              </div>
-
-              <LinkImage src={linkImage} />
-            </PostLink>
-          </PostContainer>
-
-          {user.username === author && routeOrigin === "/timeline" && !testRepost && (
-            <IconsContainer>
-              <IoPencil
-                onClick={handleEditClick}
-                cursor="pointer"
-                data-test="edit-btn"
-              />
-              <IoTrash
-                onClick={() => handleModal(true)}
-                cursor="pointer"
-                data-test="delete-btn"
-              />
-            </IconsContainer>
-          )}
-        </InnerContainer>
-      )}
-      <Modal
-        isModalOpen={isModalOpen}
-        handleCloseModal={() => handleModal(false)}
-        handleConfirm={handleDeletePost}
-        isDeleting={isDeleting}
-        title="Are you sure you want to delete this post?"
-        cancelText="No, go back"
-        confirmText="Yes, delete it"
-      />
-    </Container>
+            {user.username === author &&
+              routeOrigin === "/timeline" &&
+              !isReshare && (
+                <IconsContainer>
+                  <IoPencil
+                    onClick={handleEditClick}
+                    cursor="pointer"
+                    data-test="edit-btn"
+                  />
+                  <IoTrash
+                    onClick={() => handleModal(true)}
+                    cursor="pointer"
+                    data-test="delete-btn"
+                  />
+                </IconsContainer>
+              )}
+          </InnerContainer>
+        )}
+        <Modal
+          isModalOpen={isModalOpen}
+          handleCloseModal={() => handleModal(false)}
+          handleConfirm={handleDeletePost}
+          isLoading={isDeleting}
+          title="Are you sure you want to delete this post?"
+          cancelText="No, go back"
+          confirmText="Yes, delete it"
+        />
+        <Modal
+          isModalOpen={isReshareModalOpen}
+          handleCloseModal={() => handleReshareModal(false)}
+          handleConfirm={handleResharePost}
+          isLoading={isResharing}
+          title="Do you want to re-post this link?"
+          cancelText="No, cancel"
+          confirmText="Yes, share!"
+        />
+      </Container>
     </>
   );
 }
