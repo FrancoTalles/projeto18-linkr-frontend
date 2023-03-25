@@ -75,6 +75,7 @@ export default function Hashtag() {
                     linkTitle={post.linktitle}
                     linkDescription={post.linkdescription}
                     linkImage={post.linkimage}
+                    routeOrigin={"/timeline"}
                   />
                 );
               })
