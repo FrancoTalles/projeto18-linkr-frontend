@@ -29,6 +29,14 @@ export const UsersContainer = styled.div`
 
         color: #515151;
     }
+    p{
+        font-family: 'Lato';
+        font-style: normal;
+        font-weight: 400;
+        font-size: 19px;
+        
+        color: #C5C5C5;
+    }
 
 
 `;

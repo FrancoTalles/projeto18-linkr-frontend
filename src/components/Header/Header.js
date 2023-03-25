@@ -72,7 +72,7 @@ export default function Header() {
                 {users.length > 0 && (
                     <SuggestionsWrapper>
                         <SuggestionsList>
-                            {users.map((user) => (
+                            {users?.map((user) => (
                                 < Users
                                     setUsers={searchUsers}
                                     setName={setName}
@@ -80,6 +80,7 @@ export default function Header() {
                                     id={user.id}
                                     username={user.username}
                                     userphoto={user.pictureURL}
+                                    isfollowed={user.isfollowed}
                                 />
                             ))}
                         </SuggestionsList>
