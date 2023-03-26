@@ -16,7 +16,7 @@ export function Modal({
   isModalOpen,
   handleCloseModal,
   handleConfirm,
-  isDeleting,
+  isLoading,
 }) {
   return (
     <Container
@@ -28,12 +28,12 @@ export function Modal({
         <Title>{title}</Title>
 
         <ButtonContainer>
-          <CancelButton onClick={handleCloseModal} disabled={isDeleting} data-test="cancel">
+          <CancelButton onClick={handleCloseModal} disabled={isLoading} data-test="cancel">
             {cancelText}
           </CancelButton>
 
-          <ConfirmButton onClick={handleConfirm} disabled={isDeleting} data-test="confirm">
-            {isDeleting ? (
+          <ConfirmButton onClick={handleConfirm} disabled={isLoading} data-test="confirm">
+            {isLoading ? (
               <ThreeDots color="#FFFFFF" width={30} />
             ) : (
               <ButtonText>{confirmText}</ButtonText>

@@ -55,7 +55,6 @@ export const PostContainer = styled.div`
   display: flex;
   flex-direction: column;
   gap: 7px;
-  z-index: 1;
 
   @media (max-width: 650px) {
     width: 100%;
@@ -190,6 +189,10 @@ export const RepostContainer = styled.div`
   margin-bottom: -27px;
   background-color: #1e1e1e;
   padding-bottom: 8px;
+
+  span {
+    font-weight: bold;
+  }
 `;
 
 export const InnerContainer = styled.div`
