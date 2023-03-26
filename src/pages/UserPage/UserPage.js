@@ -8,88 +8,97 @@ import { NoPostsText } from "../Home/styles.js";
 import { UserName, UserPageContainer, UserPosts } from "./style.js";
 import { ThreeDots } from "react-loader-spinner";
 
-
 export default function UserPage() {
-    const [posts, setPosts] = useState();
-    const [isLoading, setIsLoading] = useState(true);
+  const [posts, setPosts] = useState();
+  const [isLoading, setIsLoading] = useState(true);
+  const [isSame, setIsSame] = useState(false);
+  const [follow, setFollow] = useState(false);
 
+  const { user } = useContext(AuthContext);
 
-    const { user } = useContext(AuthContext);
+  const navigate = useNavigate();
 
-    const navigate = useNavigate();
+  const { id } = useParams();
 
-    const { id } = useParams();
+  async function getPostsUser() {
+    try {
+      const promise = await api.get(`/user/${id}`, {
+        headers: {
+          Authorization: `Bearer ${user.token}`,
+        },
+      });
+      setPosts(promise.data);
+      setIsLoading(false);
+      sameUserValidation(promise.data)
+    } catch (error) {
+      console.log(error.message);
+    }
+  }
 
-    async function getPostsUser() {
-        try {
-            const promise = await api.get(`/user/${id}`, {
-                headers: {
-                    Authorization: `Bearer ${user.token}`,
-                },
-            });
+  function sameUserValidation(data) {
+    if (data.userResult.username === user.username) {
+        setIsSame(true);
+      }
+  }
 
-            setPosts(promise.data);
-            setIsLoading(false);
+  function followValidation() {
+    
+  }
 
+  useEffect(() => {
+    if (!user.token) {
+      navigate("/");
+    } else {
+      getPostsUser();
 
-        } catch (error) {
-
-        }
     }
 
-    useEffect(() => {
-        if (!user.token) {
-            navigate("/");
-        } else {
-            getPostsUser();
-        }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [id]);
 
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [id]);
+  return (
+    <UserPageContainer>
+      <Header />
 
-    return (
-        <UserPageContainer>
-            <Header />
-
-            {isLoading ?
-                <UserName>
-                    <NoPostsText>Loading</NoPostsText>
-                    <ThreeDots color="#FFFFFF" width={80} />
-                </UserName>
-                :
-                <>
-                    <UserName>
-                        <img src={posts?.userResult.pictureURL} />
-                        <h1>{`${posts?.userResult.username} posts`}</h1>
-                    </UserName>
-                    <UserPosts>
-                        {
-                            posts?.posts.length === 0 ?
-                                (
-                                    <NoPostsText data-test="message">There are no posts yet</NoPostsText>
-                                ) :
-                                posts?.posts.map((post) =>
-                                    <Post
-                                        key={post.postid}
-                                        authorId={post.userid}
-                                        postId={post.postid}
-                                        author={post.postauthor}
-                                        profilePicture={post.authorphoto}
-                                        description={post.postdescription}
-                                        link={post.postlink}
-                                        linkTitle={post.linktitle}
-                                        linkDescription={post.linkdescription}
-                                        linkImage={post.linkimage}
-                                        liked={post.liked}
-                                        likeCount={post.likescount}
-                                        whoLiked={post.wholiked}
-                                    />
-                                )
-                        }
-                    </UserPosts>
-                </>
-            }
-
-        </UserPageContainer>
-    );
+      {isLoading ? (
+        <UserName>
+          <NoPostsText>Loading</NoPostsText>
+          <ThreeDots color="#FFFFFF" width={80} />
+        </UserName>
+      ) : (
+        <>
+          <UserName>
+            <img src={posts?.userResult.pictureURL} />
+            <h1>{`${posts?.userResult.username} posts`}</h1>
+            {isSame ? "" : <button>follow</button>}
+          </UserName>
+          <UserPosts>
+            {posts?.posts.length === 0 ? (
+              <NoPostsText data-test="message">
+                There are no posts yet
+              </NoPostsText>
+            ) : (
+              posts?.posts.map((post) => (
+                <Post
+                  key={post.postid}
+                  authorId={post.userid}
+                  postId={post.postid}
+                  author={post.postauthor}
+                  profilePicture={post.authorphoto}
+                  description={post.postdescription}
+                  link={post.postlink}
+                  linkTitle={post.linktitle}
+                  linkDescription={post.linkdescription}
+                  linkImage={post.linkimage}
+                  liked={post.liked}
+                  likeCount={post.likescount}
+                  whoLiked={post.wholiked}
+                />
+              ))
+            )}
+          </UserPosts>
+        </>
+      )}
+    </UserPageContainer>
+  );
 }
