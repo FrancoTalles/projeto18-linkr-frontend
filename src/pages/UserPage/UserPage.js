@@ -7,12 +7,14 @@ import { api } from "../../services/api.js";
 import { NoPostsText } from "../Home/styles.js";
 import { UserName, UserPageContainer, UserPosts } from "./style.js";
 import { ThreeDots } from "react-loader-spinner";
+import FollowButton from "../../components/FollowButton/FollowButton.js";
 
 export default function UserPage() {
   const [posts, setPosts] = useState();
   const [isLoading, setIsLoading] = useState(true);
   const [isSame, setIsSame] = useState(false);
   const [follow, setFollow] = useState(false);
+  const [loadingButton, setLoadingButton] = useState(false);
 
   const { user } = useContext(AuthContext);
 
@@ -27,9 +29,10 @@ export default function UserPage() {
           Authorization: `Bearer ${user.token}`,
         },
       });
+      followValidation();
       setPosts(promise.data);
       setIsLoading(false);
-      sameUserValidation(promise.data)
+      sameUserValidation(promise.data);
     } catch (error) {
       console.log(error.message);
     }
@@ -37,12 +40,27 @@ export default function UserPage() {
 
   function sameUserValidation(data) {
     if (data.userResult.username === user.username) {
-        setIsSame(true);
-      }
+      setIsSame(true);
+    }
   }
 
-  function followValidation() {
-    
+  async function followValidation() {
+    const config = {
+      headers: {
+        Authorization: `Bearer ${user.token}`,
+      },
+    };
+    console.log(config);
+
+    const body = { idUserViewed: 2 };
+    console.log(body);
+    try {
+      const promise = await api.post(`/follow/status`, body, config);
+      console.log(promise.data);
+      setFollow(promise.data);
+    } catch (error) {
+      console.log(error.message);
+    }
   }
 
   useEffect(() => {
@@ -50,7 +68,6 @@ export default function UserPage() {
       navigate("/");
     } else {
       getPostsUser();
-
     }
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -70,7 +87,18 @@ export default function UserPage() {
           <UserName>
             <img src={posts?.userResult.pictureURL} />
             <h1>{`${posts?.userResult.username} posts`}</h1>
-            {isSame ? "" : <button>follow</button>}
+            {isSame ? (
+              ""
+            ) : (
+              <FollowButton
+                follow={follow}
+                setFollow={setFollow}
+                idUserViewed={id}
+                userToken={user.token}
+                loadingButton={loadingButton}
+                setLoadingButton={setLoadingButton}
+              />
+            )}
           </UserName>
           <UserPosts>
             {posts?.posts.length === 0 ? (
