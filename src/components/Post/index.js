@@ -5,6 +5,8 @@ import {
   IoHeartOutline,
   IoHeart,
   IoRepeatOutline,
+  IoSend,
+  IoChatbubbleEllipsesOutline
 } from "react-icons/io5";
 import { ReactTagify } from "react-tagify";
 import { useNavigate } from "react-router-dom";
@@ -12,6 +14,8 @@ import { Tooltip as ReactTooltip } from "react-tooltip";
 import "react-tooltip/dist/react-tooltip.css";
 
 import { AuthContext } from "../../contexts/auth.context";
+
+import axios from "axios";
 
 import { api } from "../../services/api";
 
@@ -34,6 +38,10 @@ import {
   LikeContainer,
   RepostContainer,
   InnerContainer,
+  CommentsWrapper,
+  CommentPost,
+  CommentsBox,
+  InputCommentBox
 } from "./styles";
 
 export function Post({
@@ -53,7 +61,7 @@ export function Post({
   whoLiked,
   isReshare,
   resharer,
-  resharesCount,
+  resharesCount
 }) {
   const [isEditing, setIsEditing] = useState();
   const [postDescription, setPostDescription] = useState(description);
@@ -63,6 +71,10 @@ export function Post({
   const [isReshareModalOpen, setIsReshareModalOpen] = useState(false);
   const [isResharing, setIsResharing] = useState(false);
   const [isLiked, setIsLiked] = useState(liked);
+  const [openComments, setOpenComments] = useState(false);
+  const [commentText, setCommentText] = useState('');
+  const [commentsCount, setCommentsCount] = useState(0);
+  const [commentsList, setcommentsList] = useState([]);
   const [likesName, setLikesName] = useState();
 
   const descRef = useRef(null);
@@ -245,6 +257,47 @@ export function Post({
     }
   }
 
+  function toggleComments(openComments) {
+    setOpenComments(!openComments);
+  }
+
+  async function postComment() {
+    try {
+      await api.post(
+        "/posts/comment",
+        {
+          postId: postId,
+          comment: commentText,
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${user.token}`,
+          },
+        }
+      );
+
+      getComments()
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
+
+  async function getComments() {
+    const config = {
+      headers: {
+        Authorization: `Bearer ${user.token}`
+      }
+    }
+    try {
+      let comments = await axios.get(process.env.REACT_APP_API_URL + `/posts/comment/${postId}`, config)
+      setCommentsCount(comments.data.length)
+      setcommentsList(comments.data);
+    } catch (error) {
+      console.log(error)
+    }
+  }
+
   function formatNames(names, user) {
     let result;
     if (names === null && isLiked === false) {
@@ -264,17 +317,16 @@ export function Post({
         nameList.length === 2
           ? `Você, and ${nameList[0] === user ? nameList[1] : nameList[0]}`
           : nameList.length === 1
-          ? `Você`
-          : `Você, ${
-              nameList[0] === user ? nameList[1] : nameList[0]
+            ? `Você`
+            : `Você, ${nameList[0] === user ? nameList[1] : nameList[0]
             } and other ${otherCount} people`;
     } else {
       result =
         nameList.length === 2
           ? `${nameList[0]} and ${nameList[1]}`
           : nameList.length === 1
-          ? `${nameList[0]}`
-          : `${nameList[0]}, ${nameList[1]} and other ${otherCount} people`;
+            ? `${nameList[0]}`
+            : `${nameList[0]}, ${nameList[1]} and other ${otherCount} people`;
     }
 
     return result;
@@ -283,6 +335,7 @@ export function Post({
   useEffect(() => {
     const names = formatNames(whoLiked, user.username);
     setLikesName(names);
+    getComments()
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [getAllPosts]);
@@ -328,6 +381,17 @@ export function Post({
                   place="bottom"
                   data-test="tooltip"
                 />
+              </LikeContainer>
+
+              <LikeContainer>
+                <IoChatbubbleEllipsesOutline
+                  size={18}
+                  data-test="comment-btn"
+                  onClick={() => toggleComments(openComments)}
+                />
+                <p data-test="comment-counter">
+                  {commentsCount}{" comments"}
+                </p>
               </LikeContainer>
 
               <LikeContainer>
@@ -401,6 +465,41 @@ export function Post({
               )}
           </InnerContainer>
         )}
+        {openComments &&
+          <CommentsWrapper data-test="comment-box">
+            <CommentsBox>
+              {commentsList.map(comment => (
+                <CommentPost data-test="comment" key={comment.id}>
+                  <img src={comment.pictureURL} className="profilePicture" alt=""></img>
+                  <div className="content">
+                    <div className="userName">
+                      {comment.username}
+                      {/* <span>
+                            {comment.user_id == post.userId ? ` • post's author` : ''}
+                            {following.includes(comment.user_id) ? ` • following` : ''}
+                          </span> */}
+                    </div>
+                    <div className="commentText">
+                      {comment.comment}
+                    </div>
+                  </div>
+                </CommentPost>
+              ))}
+            </CommentsBox>
+            <InputCommentBox>
+              <img src={user.pictureURL} className="profilePicture" alt=""></img>
+              <input
+                data-test="comment-input"
+                value={commentText}
+                onChange={(e) => setCommentText(e.target.value)}
+                placeholder="write a comment..."
+                className="commentText"
+                type="text"
+              />
+              <div data-test="comment-submit" onClick={postComment}><IoSend className="icon" /></div>
+            </InputCommentBox>
+          </CommentsWrapper>
+        }
         <Modal
           isModalOpen={isModalOpen}
           handleCloseModal={() => handleModal(false)}

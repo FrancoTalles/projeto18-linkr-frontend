@@ -199,3 +199,71 @@ export const InnerContainer = styled.div`
   display: flex;  
   gap: 6px
 `;
+
+export const CommentsWrapper = styled.div`
+    margin-bottom: 25px;
+`
+    
+export const CommentsBox = styled.div`
+    padding: 0 20px;
+    max-height: 250px;
+    overflow-y: scroll;
+    &::-webkit-scrollbar {
+    display: none;
+  }
+`
+export const CommentPost = styled.div`
+    display: flex;
+    padding: 20px 0;
+    border-bottom: 1px solid #353535;
+    .profilePicture{
+        width: 40px;
+        height: 40px;
+        border-radius: 50%;
+        margin-left: 5px;
+        margin-right: 18px;
+    }
+    .content{
+      
+    }
+    .userName{
+        span{
+            color: #565656;
+        }
+    }
+    .commentText{
+        color: #ACACAC;
+    }
+  `
+
+  export const InputCommentBox = styled.div`
+    padding: 20px 20px;
+    display: flex;
+    align-items: center;
+    position: relative;
+    .profilePicture{
+        width: 40px;
+        height: 40px;
+        border-radius: 50%;
+        margin-left: 5px;
+        margin-right: 18px;
+    }
+    .commentText{
+        background-color: #252525;
+        color: white;
+        font-size: 14px;
+        padding-left: 10px;
+        padding-right: 40px;
+        outline: none;
+        border: 0;
+        height: 40px;
+        border-radius: 5px;
+        width: 100%;
+    }
+    .icon{
+        position: absolute;
+        right: 35px;
+        top: 35px;
+        cursor: pointer;
+    }
+`
