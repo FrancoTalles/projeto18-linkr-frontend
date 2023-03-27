@@ -25,7 +25,7 @@ import {
   NoPostsText,
   ContainerHashtagBox,
   ContainerPosts,
-  NewPostButton,
+  NewPostNotification,
 } from "./styles";
 import Header from "../../components/Header/Header";
 import { ThreeDots } from "react-loader-spinner";
@@ -188,14 +188,12 @@ export function Home() {
       ) : (
         <PostContainer>
           {showNotification ? (
-            <NewPostButton onClick={()=>reformPage()}>
-              <div>
+            <NewPostNotification onClick={()=>reformPage()}>
+              <button data-test="load-btn">
                 {newPosts} new posts, load more!
-              </div>
-              <div>
                 <ion-icon name="refresh"></ion-icon>
-              </div>
-            </NewPostButton>
+              </button>              
+            </NewPostNotification>
           ) : ""}
 
           {posts.length === 0 ? (
