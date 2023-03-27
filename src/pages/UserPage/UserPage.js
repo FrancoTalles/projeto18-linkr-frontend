@@ -118,6 +118,7 @@ export default function UserPage() {
                   linkTitle={post.linktitle}
                   linkDescription={post.linkdescription}
                   linkImage={post.linkimage}
+                  getAllPosts={getPostsUser}
                   liked={post.liked}
                   likeCount={post.likescount}
                   whoLiked={post.wholiked}
