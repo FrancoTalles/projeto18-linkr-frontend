@@ -1,6 +1,9 @@
 import { useEffect, useState, useContext } from "react";
 import { useNavigate } from "react-router-dom";
+import axios from 'axios';
+import React from 'react';
 
+import useInterval from 'use-interval';
 import { Post } from "../../components/Post";
 
 import { api } from "../../services/api";
@@ -22,6 +25,7 @@ import {
   NoPostsText,
   ContainerHashtagBox,
   ContainerPosts,
+  NewPostNotification,
 } from "./styles";
 import Header from "../../components/Header/Header";
 import { ThreeDots } from "react-loader-spinner";
@@ -33,10 +37,15 @@ export function Home() {
   const [posts, setPosts] = useState();
   const [link, setLink] = useState("");
   const [description, setDescription] = useState("");
+  const [newPosts, setNewPosts] = useState([]);
+  const [showNotification, setShowNotification] = useState(false);
+
 
   const { user } = useContext(AuthContext);
 
   const navigate = useNavigate();
+
+  const baseURL = process.env.REACT_APP_API_URL;
 
   async function getAllPosts(isFirstLoad) {
     if (isFirstLoad) {
@@ -59,6 +68,35 @@ export function Home() {
       );
     }
   }
+
+  async function getNewPosts() {
+
+    try {
+      const promise = await axios.get(`${baseURL}/posts`, {
+        headers: {
+          Authorization: `Bearer ${user.token}`,
+        },
+      });
+
+      setNewPosts(promise.data.count);
+      if (newPosts.length > 0) {
+        setShowNotification(true);
+      } else {
+        setShowNotification(false);
+      }
+
+    } catch (error) {
+      console.log(error);
+      alert(
+        "An error occurred while trying to fetch the posts, please refresh the page"
+      );
+    }
+  };
+
+  useInterval(() => {
+    getNewPosts();
+  }, 15000);
+
 
   async function handleCreatePost(e) {
     e.preventDefault();
@@ -92,6 +130,10 @@ export function Home() {
     }
   }
 
+  async function reformPage(){
+    setShowNotification(false)
+    setPosts([newPosts, ...posts])
+  }
   useEffect(() => {
     if (!user) {
       navigate("/");
@@ -145,6 +187,15 @@ export function Home() {
         </PostContainer>
       ) : (
         <PostContainer>
+          {showNotification ? (
+            <NewPostNotification onClick={()=>reformPage()}>
+              <button data-test="load-btn">
+                {newPosts} new posts, load more!
+                <ion-icon name="refresh"></ion-icon>
+              </button>              
+            </NewPostNotification>
+          ) : ""}
+
           {posts.length === 0 ? (
             <NoPostsText data-test="message">
               There are no posts yet
@@ -181,5 +232,5 @@ export function Home() {
         <HashtagBox />
       </ContainerHashtagBox>
     </Container>
-  );
-}
+  )
+};
