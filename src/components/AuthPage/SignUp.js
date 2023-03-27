@@ -10,6 +10,7 @@ export default function SignUp() {
     const [isLoading, setIsLoading] = useState(false);
     function handleForm(e) {
         setFormInfo({ ...formInfo, [e.target.name]: e.target.value });
+        console.log(formInfo)
     }
 
     function handleSubmit(e) {
@@ -24,8 +25,9 @@ export default function SignUp() {
                 setIsLoading(false);
                 navigate("/")
             }).catch(err => {
+                console.log(err.response)
                 setIsLoading(false);
-                alert(err.response.data)
+                alert(err.response)
             })
     }
     return (<>

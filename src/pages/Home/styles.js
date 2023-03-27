@@ -177,3 +177,20 @@ export const NoPostsText = styled.p`
   }
 
 `;
+
+export const NewPostButton = styled.button`
+font-family: "Lato";
+font-weight: 400;
+font-size: 16x;
+line-height: 20px;
+color: #FFFFFF;
+width: 100%;
+background-color: #1877f2;
+border-radius: 3px;
+
+@media (max-width: 650px) {
+  width: 100%;
+  text-align: center;
+}
+
+`;
