@@ -15,7 +15,6 @@ export default function HashtagBox() {
   async function getHashtags() {
     try {
       const promise = await api.get("/hashtags");
-      console.log(promise.data);
       setHashtags(promise.data);
     } catch (error) {
       alert(

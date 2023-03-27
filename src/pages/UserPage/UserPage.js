@@ -108,10 +108,10 @@ export default function UserPage() {
             ) : (
               posts?.posts.map((post) => (
                 <Post
-                  key={post.postid}
-                  authorId={post.userid}
+                  key={Math.random()}
                   postId={post.postid}
                   author={post.postauthor}
+                  authorId={post.userid}
                   profilePicture={post.authorphoto}
                   description={post.postdescription}
                   link={post.postlink}
@@ -121,6 +121,9 @@ export default function UserPage() {
                   liked={post.liked}
                   likeCount={post.likescount}
                   whoLiked={post.wholiked}
+                  isReshare={post.reshareid ? true : false}
+                  resharer={post.reshareauthor}
+                  resharesCount={post.resharescount}
                 />
               ))
             )}

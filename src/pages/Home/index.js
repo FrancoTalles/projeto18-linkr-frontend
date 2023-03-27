@@ -39,6 +39,7 @@ export function Home() {
   const [description, setDescription] = useState("");
   const [newPosts, setNewPosts] = useState([]);
   const [showNotification, setShowNotification] = useState(false);
+  const [followers, setFollowers] = useState([]);
 
 
   const { user } = useContext(AuthContext);
@@ -59,6 +60,13 @@ export function Home() {
         },
       });
 
+      const followers = await api.get("/followers", {
+        headers: {
+          Authorization: `Bearer ${user.token}`,
+        },
+      });
+
+      setFollowers(followers.data);
       setPosts(postsData.data);
       setIsLoading(false);
     } catch (error) {
@@ -78,8 +86,10 @@ export function Home() {
         },
       });
 
-      setNewPosts(promise.data.count);
-      if (newPosts.length > 0) {
+      console.log(promise.data);
+      setNewPosts(promise.data);
+
+      if (newPosts.length > posts.length) {
         setShowNotification(true);
       } else {
         setShowNotification(false);
@@ -130,9 +140,9 @@ export function Home() {
     }
   }
 
-  async function reformPage(){
-    setShowNotification(false)
-    setPosts([newPosts, ...posts])
+  async function reformPage() {
+    setShowNotification(false);
+    setPosts(newPosts);
   }
   useEffect(() => {
     if (!user) {
@@ -188,49 +198,54 @@ export function Home() {
       ) : (
         <PostContainer>
           {showNotification ? (
-            <NewPostNotification onClick={()=>reformPage()}>
+            <NewPostNotification onClick={() => reformPage()}>
               <button data-test="load-btn">
-                {newPosts} new posts, load more!
+                {newPosts.length - posts.length} new posts, load more!
                 <ion-icon name="refresh"></ion-icon>
-              </button>              
+              </button>
             </NewPostNotification>
           ) : ""}
 
-          {posts.length === 0 ? (
-            <NoPostsText data-test="message">
-              There are no posts yet
-            </NoPostsText>
-          ) : (
-            posts.map((post) => {
-              return (
-                <Post
-                  key={Math.random()}
-                  postId={post.postid}
-                  author={post.postauthor}
-                  authorId={post.userid}
-                  profilePicture={post.authorphoto}
-                  description={post.postdescription}
-                  link={post.postlink}
-                  linkTitle={post.linktitle}
-                  linkDescription={post.linkdescription}
-                  linkImage={post.linkimage}
-                  getAllPosts={getAllPosts}
-                  routeOrigin={"/timeline"}
-                  liked={post.liked}
-                  likeCount={post.likescount}
-                  whoLiked={post.wholiked}
-                  isReshare={post.reshareid ? true : false}
-                  resharer={post.reshareauthor}
-                  resharesCount={post.resharescount}
-                />
-              );
-            })
-          )}
+          {posts.length === 0 ?
+            followers.length != 0 ?
+              <NoPostsText data-test="message">
+                No posts found from your friends
+              </NoPostsText>
+              :
+              <NoPostsText data-test="message">
+                You don't follow anyone yet. Search for new friends!
+              </NoPostsText>
+            : (
+              posts.map((post) => {
+                return (
+                  <Post
+                    key={Math.random()}
+                    postId={post.postid}
+                    author={post.postauthor}
+                    authorId={post.userid}
+                    profilePicture={post.authorphoto}
+                    description={post.postdescription}
+                    link={post.postlink}
+                    linkTitle={post.linktitle}
+                    linkDescription={post.linkdescription}
+                    linkImage={post.linkimage}
+                    getAllPosts={getAllPosts}
+                    routeOrigin={"/timeline"}
+                    liked={post.liked}
+                    likeCount={post.likescount}
+                    whoLiked={post.wholiked}
+                    isReshare={post.reshareid ? true : false}
+                    resharer={post.reshareauthor}
+                    resharesCount={post.resharescount}
+                  />
+                );
+              })
+            )}
         </PostContainer>
       )}
       <ContainerHashtagBox>
         <HashtagBox />
       </ContainerHashtagBox>
     </Container>
-  )
+  );
 };
