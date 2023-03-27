@@ -178,7 +178,7 @@ export const NoPostsText = styled.p`
 
 `;
 
-export const NewPostButton = styled.div`
+export const NewPostNotification = styled.div`
   font-family: "Lato";
   font-weight: 400;
   font-size: 16x;
